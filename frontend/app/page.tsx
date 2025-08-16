@@ -3,13 +3,16 @@
 import type React from "react"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Eye, EyeOff } from "lucide-react"
+import { fi } from "date-fns/locale"
 
 export default function LoginPage() {
+  const router = useRouter();
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [showPassword, setShowPassword] = useState(false)
@@ -17,14 +20,38 @@ export default function LoginPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    setIsLoading(true)
 
-    // Simulate login process
-    setTimeout(() => {
-      console.log("[v0] Login attempt:", { email, password })
-      setIsLoading(false)
-      // Here you would typically handle the actual login logic
-    }, 1000)
+    try {
+      setIsLoading(true)
+      const response = await fetch("http://localhost:3001/auth/login", {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({email, password}),
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Erro ${response.status}: ${errorText}`);
+        
+      }
+
+      const user = await response.json();
+
+      if (user.rule == "admin") {
+        router.replace("/admin");
+      } else {
+        router.replace("/user");
+      }
+
+      
+    } catch (error) {
+      console.error("Faild to log in:", error);
+    } finally {
+        setIsLoading(false)
+    }
+   
   }
 
   return (
