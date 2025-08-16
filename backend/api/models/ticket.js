@@ -25,6 +25,10 @@ const ticketSchema = new mongoose.Schema({
         enum: ['Em andamento', 'Concluída', 'Cancelada'],
         default: 'Em andamento',
         require: true
+    },
+    created_at: {
+        type: Date,
+        default: Date.now
     }
 });
 
