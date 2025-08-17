@@ -3,8 +3,6 @@
 # dependencies
 /node_modules
 
-user
-
 # next.js
 /.next/
 /out/
