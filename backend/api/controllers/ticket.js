@@ -3,7 +3,7 @@ const ticketModel = require("../models/ticket");
 
 exports.getAllTickets = async (req, res) => {
     try {
-        const tickets = await ticketModel.find();
+        const tickets = await ticketModel.find().populate('user_id', 'name');
         
         console.log(tickets); 
         res.json(tickets);
