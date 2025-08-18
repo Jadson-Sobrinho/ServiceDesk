@@ -33,9 +33,37 @@ exports.login = async (req, res) => {
 
         console.log(token);
         
-        return res.json(payload);
+        return res.json({
+          token, 
+          user: payload
+        });
+
+
     } catch (error) {
         console.error('Faild to log in:', error);
         return res.status(500).json({ error: 'Server error' });
     }
 }
+
+
+exports.verifyToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (!token) {
+    return res.status(401).json({ error: 'Token não fornecido' });
+  }
+
+  jwt.verify(
+    token, 'Trocar esta chave depois', (err, decoded) => {
+      if (err) {
+        console.error('Erro ao verificar token:', err);
+        return res.status(403).json({ error: 'Token inválido ou expirado' });
+      }
+      console.log('decoded JWT:', decoded);
+      //Armazena o payload decodificado em req.user
+      req.user = decoded;
+      next();
+    }
+  );
+};
