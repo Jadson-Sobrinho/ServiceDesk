@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const userModel = require("../models/user");
+const jwt = require('jsonwebtoken');
 
 exports.login = async (req, res) => {
     try {
@@ -24,6 +25,14 @@ exports.login = async (req, res) => {
             phone_number: user.phone_number
         }
 
+        const token = jwt.sign(
+            payload,
+            'Trocar esta chave depois',
+            {expiresIn: '1h'}
+        );
+
+        console.log(token);
+        
         return res.json(payload);
     } catch (error) {
         console.error('Faild to log in:', error);
