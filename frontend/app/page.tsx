@@ -38,7 +38,12 @@ export default function LoginPage() {
       }
 
       const user = await response.json();
+      
+      //TODO: Armazenar token no cache com redis
+      localStorage.setItem('authToken', user.token);
+      localStorage.setItem('user', JSON.stringify(user.user))
 
+      //TODO: Refatorar
       if (user.rule == "admin") {
         router.replace("/admin");
       } else {
