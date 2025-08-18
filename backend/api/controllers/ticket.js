@@ -1,4 +1,3 @@
-const express = require("express");
 const ticketModel = require("../models/ticket");
 
 exports.getAllTickets = async (req, res) => {
@@ -10,7 +9,19 @@ exports.getAllTickets = async (req, res) => {
 
     } catch (error) {
         console.error(error);
-        res.status(500).json({error: "Faild to get all tickets (controller)"})
+        res.status(500).json({error: "Faild to get all tickets (controller)"});
+    }
+};
+
+exports.getUserTickets = async (req, res) => {
+    try {
+        const user_id = req.user.user_id;
+
+        const userTickets = await ticketModel.find({user_id: user_id}).populate('user_id', 'name');
+        res.json(userTickets);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Faild to get user tickets (controller)"});
     }
 };
 
