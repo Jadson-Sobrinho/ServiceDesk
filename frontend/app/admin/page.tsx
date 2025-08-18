@@ -43,7 +43,7 @@ useEffect(() => {
 
 const filteredTickets = tickets.filter((ticket) => {
     const matchesSearch =
-      ticket.user_id.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      ticket.user_id.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       ticket._id.toLowerCase().includes(searchQuery.toLowerCase()) ||
       ticket.description.toLowerCase().includes(searchQuery.toLowerCase())
 
@@ -191,7 +191,7 @@ const filteredTickets = tickets.filter((ticket) => {
                   <div className="space-y-4">
                     <div>
                       <Label className="text-lg font-medium">Nome:</Label>
-                      <p className="text-xl mt-2">{selectedTicket.user_id}</p>
+                      <p className="text-xl mt-2">{selectedTicket.user_id.name}</p>
                     </div>
                     <div>
                       <Label className="text-lg font-medium">Endereço:</Label>
@@ -280,7 +280,7 @@ const filteredTickets = tickets.filter((ticket) => {
                             {ticket.status}
                           </Badge>
                         </div>
-                        <p className="text-xl font-medium text-primary mb-2">{ticket.user_id}</p>
+                        <p className="text-xl font-medium text-primary mb-2">{ticket.user_id.name}</p>
                         <p className="text-base text-muted-foreground mb-2">{ticket.address}</p>
                         <p className="text-base line-clamp-2">{ticket.description}</p>
                         <p className="text-sm text-muted-foreground mt-3">Criado em: {ticket.createdAt}</p>
