@@ -6,8 +6,8 @@ const auth = require("../controllers/auth");
 
 router.get('/', ticketController.getAllTickets);
 
-router.post('/', ticketController.createTicket);
-
 router.get('/user', auth.verifyToken, ticketController.getUserTickets);
+
+router.post('/', auth.verifyToken, ticketController.createTicket);
 
 module.exports = router;
