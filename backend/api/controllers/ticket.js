@@ -27,8 +27,9 @@ exports.getUserTickets = async (req, res) => {
 
 exports.createTicket = async (req, res) => {
     try {
-        const {
-            user_id,
+        const userId = req.user?.user_id;
+
+        let {
             address,
             description,
             urgency_level
@@ -36,7 +37,7 @@ exports.createTicket = async (req, res) => {
         } = req.body;
 
         const newTicket = new ticketModel({
-            user_id,
+            user_id: userId,
             address,
             description,
             urgency_level
