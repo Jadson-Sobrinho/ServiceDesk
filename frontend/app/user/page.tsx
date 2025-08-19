@@ -14,17 +14,6 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Badge } from "@/components/ui/badge"
 import { User, LogOut, ArrowLeft } from "lucide-react"
 
-const storedUser = localStorage.getItem("user");
-let currentUserId = null;
-
-if (storedUser) {
-  try {
-    const user = JSON.parse(storedUser);
-    currentUserId = user.user_id;
-  } catch (e) {
-    console.log('Current user:', currentUserId);
-  }
-}
 
 export default function ServiceDeskPage() {
   const [tickets, setTickets] = useState<any[]>([])
@@ -32,46 +21,48 @@ export default function ServiceDeskPage() {
   const [showTicketForm, setShowTicketForm] = useState(false)
   const [showTicketsList, setShowTicketsList] = useState(false)
   const [formData, setFormData] = useState({
-    user_id: "",
     address: "",
     description: "",
     urgency: "",
   })
 
 
-useEffect(() => {
-  async function search() {
-    try {
-      const response = await fetch("http://localhost:3001/ticket/user", {
-          headers: {
-            'Authorization': 'Bearer ' + localStorage.getItem('authToken') 
+  useEffect(() => {
+    async function search() {
+      try {
+        const token = localStorage.getItem('authToken');
+        const response = await fetch("http://localhost:3001/ticket/user", {
+            headers: {
+              'Authorization': 'Bearer ' + token 
+            }
           }
-        }
-      );
+        );
 
-      if(!response.ok) {
-        console.log("Erro ao buscar tickets do usuario");
+        if(!response.ok) {
+          console.log("Erro ao buscar tickets do usuario");
+        }
+        const data = await response.json();
+        console.log(data);
+        setTickets(data);   
+      } catch (error) {
+        console.error(error);
       }
-      const data = await response.json();
-      console.log(data);
-      setTickets(data);   
-    } catch (error) {
-      console.error(error);
     }
-  }
-search();
-}, []);
+  search();
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     console.log("Ticket submitted:", formData)
 
     try {
+      const token = localStorage.getItem('authToken');
       setIsSubmitting(true);
       const response = await fetch("http://localhost:3001/ticket", {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': 'Bearer ' + token
         },
         body: JSON.stringify(formData)
       });
@@ -93,7 +84,7 @@ search();
   
 
     // Reset form and hide it
-    setFormData({ user_id: "", address: "", description: "", urgency: "" })
+    setFormData({ address: "", description: "", urgency: "" })
     setShowTicketForm(false)
   }
 
