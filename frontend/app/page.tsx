@@ -44,7 +44,7 @@ export default function LoginPage() {
       localStorage.setItem('user', JSON.stringify(user.user))
 
       //TODO: Refatorar
-      if (user.rule == "admin") {
+      if (user.user.rule == "admin") {
         router.replace("/admin");
       } else {
         router.replace("/user");
