@@ -175,7 +175,11 @@ const filteredTickets = tickets.filter((ticket) => {
                     <p className="text-base text-muted-foreground">{userInfo?.email}</p>
                   </div>
                 </div>
-                <Button variant="destructive" className="w-full text-base" size="lg">
+                <Button variant="destructive" className="w-full text-base" size="lg" 
+                  onClick={() => {
+                    localStorage.removeItem("atuhToken");
+                    window.location.href = '/'
+                  }}>
                   <LogOut className="mr-2 h-5 w-5" />
                   Logout
                 </Button>
