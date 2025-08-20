@@ -15,6 +15,7 @@ import { User, LogOut, ArrowLeft, Search } from "lucide-react"
 
 
 export default function ServiceDeskPage() {
+  const [userInfo, setUserInfo] = useState<any>(null)
   const [tickets, setTickets] = useState<any[]>([])
   const [selectedTicket, setSelectedTicket] = useState<(typeof tickets)[0] | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
@@ -25,7 +26,6 @@ export default function ServiceDeskPage() {
     description: "",
     urgency: "",
   })
-
 
 useEffect(() => {
   async function search() {
@@ -38,6 +38,31 @@ useEffect(() => {
     }
   }
   search();
+
+  async function getProfile() {
+    const token = localStorage.getItem('authToken');
+    try {
+      const response = await fetch("http://localhost:3001/auth/me", {
+        headers: {'Authorization': 'Bearer ' + token}
+
+      });
+
+      console.log(response);
+
+      if(!response.ok) {
+        throw new Error('Faild to search user info.');
+      }
+      const userInfo = await response.json();
+      setUserInfo(userInfo);
+      console.log(userInfo);
+
+      return userInfo;
+    } catch (error) {
+       console.error('Faild to load user info:', error);
+    }
+  }
+
+  getProfile();
 }, []);
 
 
@@ -121,6 +146,7 @@ const filteredTickets = tickets.filter((ticket) => {
           </div>
 
           {/* User Avatar with Modal */}
+          
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="ghost" className="p-0">
@@ -145,8 +171,8 @@ const filteredTickets = tickets.filter((ticket) => {
                     </AvatarFallback>
                   </Avatar>
                   <div>
-                    <p className="font-medium text-lg">Admin User</p>
-                    <p className="text-base text-muted-foreground">admin@servicedesk.com</p>
+                    <p className="font-medium text-lg">{userInfo?.name}</p>
+                    <p className="text-base text-muted-foreground">{userInfo?.email}</p>
                   </div>
                 </div>
                 <Button variant="destructive" className="w-full text-base" size="lg">
