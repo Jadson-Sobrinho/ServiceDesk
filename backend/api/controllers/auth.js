@@ -67,3 +67,9 @@ exports.verifyToken = (req, res, next) => {
     }
   );
 };
+
+exports.getProfile = (req, res) => {
+  console.log(req.user);
+  const {user_id, name, email, rule, phone_number} = req.user;
+  return res.json({user_id, name, email, rule, phone_number});
+};
