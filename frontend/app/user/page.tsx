@@ -163,7 +163,7 @@ export default function ServiceDeskPage() {
             <DialogTrigger asChild>
               <Button variant="ghost" className="p-0">
                 <Avatar className="h-12 w-12">
-                  <AvatarImage src="/placeholder.svg?height=48&width=48" />
+                  <AvatarImage src="/profile-icon.png?height=48&width=48" />
                   <AvatarFallback>
                     <User className="h-6 w-6" />
                   </AvatarFallback>
