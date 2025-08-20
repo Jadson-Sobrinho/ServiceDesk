@@ -16,6 +16,7 @@ import { User, LogOut, ArrowLeft } from "lucide-react"
 
 
 export default function ServiceDeskPage() {
+  const [userInfo, setUserInfo] = useState<any>(null)
   const [tickets, setTickets] = useState<any[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showTicketForm, setShowTicketForm] = useState(false)
@@ -49,6 +50,31 @@ export default function ServiceDeskPage() {
       }
     }
   search();
+
+    async function getProfile() {
+    const token = localStorage.getItem('authToken');
+    try {
+      const response = await fetch("http://localhost:3001/auth/me", {
+        headers: {'Authorization': 'Bearer ' + token}
+
+      });
+
+      console.log(response);
+
+      if(!response.ok) {
+        throw new Error('Faild to search user info.');
+      }
+      const userInfo = await response.json();
+      setUserInfo(userInfo);
+      console.log(userInfo);
+
+      return userInfo;
+    } catch (error) {
+       console.error('Faild to load user info:', error);
+    }
+  }
+
+  getProfile();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -133,41 +159,45 @@ export default function ServiceDeskPage() {
             </Button>
 
             {/* User Avatar with Modal */}
-            <Dialog>
-              <DialogTrigger asChild>
-                <Button variant="ghost" className="p-0">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src="/placeholder.svg?height=48&width=48" />
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button variant="ghost" className="p-0">
+                <Avatar className="h-12 w-12">
+                  <AvatarImage src="/placeholder.svg?height=48&width=48" />
+                  <AvatarFallback>
+                    <User className="h-6 w-6" />
+                  </AvatarFallback>
+                </Avatar>
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-lg">
+              <DialogHeader>
+                <DialogTitle className="text-xl">User Profile</DialogTitle>
+              </DialogHeader>
+              <div className="space-y-6">
+                <div className="flex items-center gap-4">
+                  <Avatar className="h-16 w-16">
+                    <AvatarImage src="/placeholder.svg?height=64&width=64" />
                     <AvatarFallback>
-                      <User className="h-6 w-6" />
+                      <User className="h-8 w-8" />
                     </AvatarFallback>
                   </Avatar>
-                </Button>
-              </DialogTrigger>
-              <DialogContent className="sm:max-w-lg">
-                <DialogHeader>
-                  <DialogTitle className="text-xl">User Profile</DialogTitle>
-                </DialogHeader>
-                <div className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <Avatar className="h-16 w-16">
-                      <AvatarImage src="/placeholder.svg?height=64&width=64" />
-                      <AvatarFallback>
-                        <User className="h-8 w-8" />
-                      </AvatarFallback>
-                    </Avatar>
-                    <div>
-                      <p className="font-medium text-lg">John Doe</p>
-                      <p className="text-base text-muted-foreground">john.doe@company.com</p>
-                    </div>
+                  <div>
+                    <p className="font-medium text-lg">{userInfo?.name}</p>
+                    <p className="text-base text-muted-foreground">{userInfo?.email}</p>
                   </div>
-                  <Button variant="destructive" className="w-full text-base" size="lg">
-                    <LogOut className="mr-2 h-5 w-5" />
-                    Logout
-                  </Button>
                 </div>
-              </DialogContent>
-            </Dialog>
+                <Button variant="destructive" className="w-full text-base" size="lg" 
+                  onClick={() => {
+                    localStorage.removeItem("atuhToken");
+                    window.location.href = '/'
+                  }}>
+                  <LogOut className="mr-2 h-5 w-5" />
+                  Logout
+                </Button>
+              </div>
+            </DialogContent>
+          </Dialog>
           </div>
         </div>
       </nav>
