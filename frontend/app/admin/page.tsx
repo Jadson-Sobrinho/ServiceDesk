@@ -146,7 +146,6 @@ const filteredTickets = tickets.filter((ticket) => {
           </div>
 
           {/* User Avatar with Modal */}
-          
           <Dialog>
             <DialogTrigger asChild>
               <Button variant="ghost" className="p-0">
@@ -250,7 +249,7 @@ const filteredTickets = tickets.filter((ticket) => {
                   <Button
                     onClick={() => handleStatusUpdate("Concluído")}
                     className="flex-1 text-lg h-14"
-                    variant="default"
+                    variant="outline"
                   >
                     Concluído
                   </Button>
