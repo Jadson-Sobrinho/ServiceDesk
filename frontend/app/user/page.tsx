@@ -118,31 +118,33 @@ export default function ServiceDeskPage() {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-  const getStatusVariant = (status: string) => {
+  const getStatusClass = (status: string) => {
     switch (status) {
       case "Aberto":
-        return "destructive"
+        return "bg-gray-300 text-black"
       case "Em andamento":
-        return "default"
+        return "bg-blue-500 text-white"
       case "Concluído":
-        return "secondary"
+        return "bg-green-500 text-white"
+      case "Cancelado":
+        return "bg-red-500 text-white"
       default:
-        return "outline"
+        return "bg-gray-200 text-black"
     }
   }
 
-  const getUrgencyVariant = (urgency_level: string) => {
+  const getUrgencyClass = (urgency_level: string) => {
     switch (urgency_level) {
       case "Crítico":
-        return "destructive"
+        return "bg-red-600 text-white" 
       case "Alto":
-        return "destructive"
+        return "bg-orange-500 text-white"
       case "Médio":
-        return "default"
+        return "bg-yellow-400 text-black"
       case "Baixo":
-        return "secondary"
+        return "bg-gray-200 text-black"
       default:
-        return "outline"
+        return "bg-gray-200 text-black"
     }
   }
 
@@ -221,10 +223,10 @@ export default function ServiceDeskPage() {
                     <div className="flex items-center justify-between">
                       <CardTitle className="text-2xl">{ticket._id}</CardTitle>
                       <div className="flex gap-3">
-                        <Badge variant={getUrgencyVariant(ticket.urgency_level)} className="text-sm px-3 py-1">
+                        <Badge className={`text-base px-4 py-2 ${getUrgencyClass(ticket.urgency_level)}`}>
                           {ticket.urgency_level}
                         </Badge>
-                        <Badge variant={getStatusVariant(ticket.status)} className="text-sm px-3 py-1">
+                        <Badge className={`text-base px-4 py-2 ${getStatusClass(ticket.status)}`}>
                           {ticket.status}
                         </Badge>
                       </div>

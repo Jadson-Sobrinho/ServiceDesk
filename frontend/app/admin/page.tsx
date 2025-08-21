@@ -115,31 +115,33 @@ const filteredTickets = tickets.filter((ticket) => {
     setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
-  const getStatusVariant = (status: string) => {
+  const getStatusClass = (status: string) => {
     switch (status) {
       case "Aberto":
-        return "destructive"
+        return "bg-gray-300 text-black"
       case "Em andamento":
-        return "default"
+        return "bg-blue-500 text-white"
       case "Concluído":
-        return "secondary"
+        return "bg-green-500 text-white"
+      case "Cancelado":
+        return "bg-red-500 text-white"
       default:
-        return "outline"
+        return "bg-gray-200 text-black"
     }
   }
 
-  const getUrgencyVariant = (urgency: string) => {
-    switch (urgency) {
+  const getUrgencyClass = (urgency_level: string) => {
+    switch (urgency_level) {
       case "Crítico":
-        return "destructive"
+        return "bg-red-600 text-white" 
       case "Alto":
-        return "destructive"
+        return "bg-orange-500 text-white"
       case "Médio":
-        return "default"
+        return "bg-yellow-400 text-black"
       case "Baixo":
-        return "secondary"
+        return "bg-gray-200 text-black"
       default:
-        return "outline"
+        return "bg-gray-200 text-black"
     }
   }
 
@@ -224,10 +226,10 @@ const filteredTickets = tickets.filter((ticket) => {
                 <div className="flex items-center justify-between">
                   <CardTitle className="text-3xl">{selectedTicket._id}</CardTitle>
                   <div className="flex gap-3">
-                    <Badge variant={getUrgencyVariant(selectedTicket.urgency_level)} className="text-base px-4 py-2">
+                    <Badge className={`text-base px-4 py-2 ${getUrgencyClass(selectedTicket.urgency_level)}`}>
                       {selectedTicket.urgency_level}
                     </Badge>
-                    <Badge variant={getStatusVariant(selectedTicket.status)} className="text-base px-4 py-2">
+                    <Badge className={`text-base px-4 py-2 ${getStatusClass(selectedTicket.status)}`}>
                       {selectedTicket.status}
                     </Badge>
                   </div>
@@ -259,22 +261,19 @@ const filteredTickets = tickets.filter((ticket) => {
                 <div className="flex gap-4 pt-8 border-t">
                   <Button
                     onClick={() => handleStatusUpdate("Em andamento")}
-                    className="flex-1 text-lg h-14"
-                    variant="default"
+                    className="flex-1 text-lg h-14 bg-blue-500 hover:bg-blue-600 text-white"
                   >
                     Em andamento
                   </Button>
                   <Button
                     onClick={() => handleStatusUpdate("Concluído")}
-                    className="flex-1 text-lg h-14"
-                    variant="outline"
+                    className="flex-1 text-lg h-14 bg-green-500 hover:bg-green-600 text-white"
                   >
                     Concluído
                   </Button>
                   <Button
                     onClick={() => handleStatusUpdate("Cancelado")}
-                    className="flex-1 text-lg h-14"
-                    variant="destructive"
+                    className="flex-1 text-lg h-14 bg-red-500 hover:bg-red-600 text-white"
                   >
                     Cancelar
                   </Button>
@@ -320,10 +319,10 @@ const filteredTickets = tickets.filter((ticket) => {
                       <div className="flex-1">
                         <div className="flex items-center gap-4 mb-3">
                           <h3 className="text-2xl font-semibold">{ticket._id}</h3>
-                          <Badge variant={getUrgencyVariant(ticket.urgency_level)} className="text-sm px-3 py-1">
+                          <Badge className={`text-base px-4 py-2 ${getUrgencyClass(ticket.urgency_level)}`}>
                             {ticket.urgency_level}
                           </Badge>
-                          <Badge variant={getStatusVariant(ticket.status)} className="text-sm px-3 py-1">
+                          <Badge className={`text-base px-4 py-2 ${getStatusClass(ticket.status)}`}>
                             {ticket.status}
                           </Badge>
                         </div>
