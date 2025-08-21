@@ -10,4 +10,6 @@ router.get('/user', auth.verifyToken, ticketController.getUserTickets);
 
 router.post('/', auth.verifyToken, ticketController.createTicket);
 
+router.patch('/status', auth.verifyToken, ticketController.UpdateTicketStatus);
+
 module.exports = router;

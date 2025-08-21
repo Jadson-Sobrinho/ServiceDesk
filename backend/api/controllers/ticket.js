@@ -51,3 +51,23 @@ exports.createTicket = async (req, res) => {
         return res.status(500).json({message: "Faild to create a new ticket"});
     }
 };
+
+exports.UpdateTicketStatus = async (req, res) => {
+    try {
+        const {_id, status} = req.body;
+        
+        console.log(_id, status);
+        await ticketModel.findByIdAndUpdate(
+            _id,
+            {
+                $set: {status: status}
+            },
+            {new: true}
+        );
+
+        return res.status(200).json({ message: 'Operação concluída sucesso.' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Faild to update ticket status (controller)"});
+    }
+};
