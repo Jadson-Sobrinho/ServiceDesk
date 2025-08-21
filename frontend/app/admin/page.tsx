@@ -78,10 +78,28 @@ const filteredTickets = tickets.filter((ticket) => {
   })
 
 
-  const handleStatusUpdate = (status: string) => {
+  const handleStatusUpdate = async (status: string) => {
+    const token = localStorage.getItem('authToken');
     if (selectedTicket) {
-      console.log(`[v0] Updating ticket ${selectedTicket.id} to status: ${status}`)
-      // Here you would update the ticket status in your backend
+      try {
+        const response = await fetch("http://localhost:3001/ticket/status", {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + token
+          },
+          body: JSON.stringify({
+            _id: selectedTicket._id,
+            status: status
+          })
+        });
+
+        if (!response.ok) {
+          throw new Error('Faild to update ticket status.');
+        }
+      } catch (error) {
+        console.error('Faild to update ticket status:', error);
+      }
       setSelectedTicket(null)
     }
   }
