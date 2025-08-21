@@ -22,8 +22,8 @@ const ticketSchema = new mongoose.Schema({
     },
     status: {
         type: String,
-        enum: ['Em andamento', 'Concluída', 'Cancelada'],
-        default: 'Em andamento',
+        enum: ['Aberto', 'Em andamento', 'Concluída', 'Cancelada'],
+        default: 'Aberto',
         require: true
     },
     created_at: {
