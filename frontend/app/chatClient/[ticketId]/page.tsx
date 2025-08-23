@@ -202,7 +202,6 @@ export default function TicketChatPage() {
       isSupport: false,
     }
 
-    setMessages((prev) => [...prev, message])
     setNewMessage("")
   }
 
