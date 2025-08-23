@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -12,10 +13,11 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
-import { User, LogOut, ArrowLeft } from "lucide-react"
+import { User, LogOut, ArrowLeft, MessageCircle } from "lucide-react"
 
 
 export default function ServiceDeskPage() {
+  const router = useRouter();
   const [userInfo, setUserInfo] = useState<any>(null)
   const [tickets, setTickets] = useState<any[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -148,6 +150,10 @@ export default function ServiceDeskPage() {
     }
   }
 
+  const handleOpenChat = (ticket: any) => {
+    router.push(`/chatClient/${ticket._id}`);
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -241,6 +247,21 @@ export default function ServiceDeskPage() {
                         <strong>Descrição:</strong> {ticket.description}
                       </p>
                       <p className="text-sm text-muted-foreground">Criado em: {ticket.created_At}</p>
+
+                      <div className="ml-4">
+                        <Button
+                          variant="outline"
+                          size="lg"
+                          className="h-12 w-12 p-0 bg-transparent"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleOpenChat(ticket)
+                          }}
+                        >
+                          <MessageCircle className="h-5 w-5"/>
+                        </Button>
+                      </div>
+
                     </div>
                   </CardContent>
                 </Card>

@@ -3,6 +3,7 @@
 import type React from "react"
 
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -11,10 +12,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { User, LogOut, ArrowLeft, Search } from "lucide-react"
+import { User, LogOut, ArrowLeft, Search, MessageCircle } from "lucide-react"
 
 
 export default function ServiceDeskPage() {
+  const router = useRouter();
   const [userInfo, setUserInfo] = useState<any>(null)
   const [tickets, setTickets] = useState<any[]>([])
   const [selectedTicket, setSelectedTicket] = useState<(typeof tickets)[0] | null>(null)
@@ -145,6 +147,9 @@ const filteredTickets = tickets.filter((ticket) => {
     }
   }
 
+  const handleOpenChat = (ticket: any) => {
+    router.push(`/chatSupport/${ticket._id}`);
+  }
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -330,6 +335,20 @@ const filteredTickets = tickets.filter((ticket) => {
                         <p className="text-base text-muted-foreground mb-2">{ticket.address}</p>
                         <p className="text-base line-clamp-2">{ticket.description}</p>
                         <p className="text-sm text-muted-foreground mt-3">Criado em: {ticket.createdAt}</p>
+                      </div>
+
+                      <div className="ml-4">
+                        <Button
+                          variant="outline"
+                          size="lg"
+                          className="h-12 w-12 p-0 bg-transparent"
+                          onClick={(e) => {
+                            e.stopPropagation()
+                            handleOpenChat(ticket)
+                          }}
+                        >
+                          <MessageCircle className="h-5 w-5"/>
+                        </Button>
                       </div>
                     </div>
                   </CardContent>
