@@ -136,6 +136,38 @@ export default function TicketChatPage() {
       })
     }
 
+        s.on("chatHistory", (messages: any[]) => {
+      setMessages(
+        messages.map((msg) => ({
+          id: msg._id || String(Date.now()),
+          sender: senderLabelFromPayload(msg.sender),
+          content: msg.content,
+          timestamp: new Date(msg.created_at).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          isSupport: isSenderSupport(msg.sender),
+        }))
+      )
+    })
+
+    const onChatHistory = (messages: any[]) => {
+      setMessages(
+        messages.map((msg) => ({
+          id: msg._id || String(Date.now()),
+          sender: senderLabelFromPayload(msg.sender),
+          content: msg.content,
+          timestamp: new Date(msg.created_at).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+          }),
+          isSupport: isSenderSupport(msg.sender),
+        }))
+      )
+    }
+
+    s.on("chatHistory", onChatHistory)
+
     const onMessage = (msg: any) => {
       // msg.sender can be a string or an object { id, role, name }
       const senderLabel = senderLabelFromPayload(msg.sender)
@@ -166,6 +198,7 @@ export default function TicketChatPage() {
     // cleanup
     return () => {
       s.off("connect", onConnect)
+      s.off("chatHistory", onChatHistory)
       s.off("message", onMessage)
       s.off("disconnect", onDisconnect)
       // disconnect socket created for this page

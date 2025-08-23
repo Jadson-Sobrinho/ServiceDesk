@@ -6,10 +6,20 @@ module.exports = (io) => {
   io.on("connection", (socket) => {
     console.log("User connected:", socket.id);
 
-    socket.on("joinRoom", (conversationId) => {
+    socket.on("joinRoom", async (conversationId) => {
       if (!conversationId) return;
+
       socket.join(conversationId);
       console.log(`User ${socket.id} entered room ${conversationId}`);
+
+      try {
+        const chatHistory = await chatModel.findById(conversationId).lean();
+        if (chatHistory && chatHistory.messages) {
+          socket.emit("chatHistory", chatHistory.messages);
+        }
+      } catch (error) {
+        console.log("Faild to get chat history", error);
+      }
     });
 
     // Recebe: (payload, callback?)
