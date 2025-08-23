@@ -13,6 +13,20 @@ exports.getAllTickets = async (req, res) => {
     }
 };
 
+exports.getTicketById = async (req, res) => {
+    try {
+        const ticketId = req.params.id;
+        console.log(ticketId);
+
+        const ticket = await ticketModel.findById(ticketId);
+        res.json(ticket);
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({error: "Faild to get ticket (controller)"});
+    }
+};
+
+
 exports.getUserTickets = async (req, res) => {
     try {
         const user_id = req.user.user_id;

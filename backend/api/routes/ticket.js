@@ -8,6 +8,8 @@ router.get('/', ticketController.getAllTickets);
 
 router.get('/user', auth.verifyToken, ticketController.getUserTickets);
 
+router.get('/:id', ticketController.getTicketById);
+
 router.post('/', auth.verifyToken, ticketController.createTicket);
 
 router.patch('/status', auth.verifyToken, ticketController.UpdateTicketStatus);
