@@ -253,7 +253,8 @@ export default function TicketChatPage() {
       <nav className="border-b bg-card">
         <div className="flex items-center justify-between px-8 py-6">
           <div className="flex items-center gap-4">
-            <Button variant="ghost" onClick={() => router.replace("/admin")} size="lg" className="text-base">
+            {/*TODO: Alterar a forma de voltar a página */}
+            <Button variant="ghost" onClick={() => router.replace("/user")} size="lg" className="text-base">
               <ArrowLeft className="mr-2 h-5 w-5" />
               Voltar
             </Button>
