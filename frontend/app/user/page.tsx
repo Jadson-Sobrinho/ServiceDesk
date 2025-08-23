@@ -2,7 +2,8 @@
 
 import type React from "react"
 
-import { useEffect, useState } from "react"
+
+import { useRef, useEffect, useState } from "react"
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -17,6 +18,7 @@ import { User, LogOut, ArrowLeft, MessageCircle } from "lucide-react"
 
 
 export default function ServiceDeskPage() {
+  const effectRan = useRef(false);
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<any>(null)
   const [tickets, setTickets] = useState<any[]>([])
@@ -31,6 +33,13 @@ export default function ServiceDeskPage() {
 
 
   useEffect(() => {
+  /**
+   * Em React 18 (dev mode com StrictMode), o useEffect roda duas vezes
+   * Em produção, não teria duplicidade
+   */
+  if (effectRan.current) return;
+  effectRan.current = true;
+  
     async function search() {
       try {
         const token = localStorage.getItem('authToken');
@@ -51,7 +60,6 @@ export default function ServiceDeskPage() {
         console.error(error);
       }
     }
-  search();
 
     async function getProfile() {
     const token = localStorage.getItem('authToken');
@@ -77,6 +85,7 @@ export default function ServiceDeskPage() {
   }
 
   getProfile();
+  search();
   }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
