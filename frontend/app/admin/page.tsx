@@ -24,6 +24,7 @@ export default function ServiceDeskPage() {
   const [selectedTicket, setSelectedTicket] = useState<(typeof tickets)[0] | null>(null)
   const [searchQuery, setSearchQuery] = useState("")
   const [urgencyFilter, setUrgencyFilter] = useState("all")
+  const [statusClassFilter, setStatusClassFilter] = useState("all")
   const [showTicketForm, setShowTicketForm] = useState(false)
   const [formData, setFormData] = useState({
     address: "",
@@ -85,7 +86,11 @@ const filteredTickets = tickets.filter((ticket) => {
 
     const matchesUrgency = urgencyFilter === "all" || ticket.urgency_level === urgencyFilter
 
-    return matchesSearch && matchesUrgency
+    const ticketStatus = ticket.status;
+
+    const matchesStatus = statusClassFilter === "all" || ticketStatus === statusClassFilter;
+
+    return matchesSearch && matchesUrgency && matchesStatus
   })
 
 
@@ -307,6 +312,24 @@ const filteredTickets = tickets.filter((ticket) => {
             <div className="flex items-center justify-between mb-8">
               <h2 className="text-4xl font-semibold">Todos os Tickets</h2>
 
+              {/* Status Filter Dropdown */}
+              <div className="flex items-center gap-4">
+                <Label htmlFor="urgency-filter" className="text-lg font-medium">
+                  Filtrar por Status:
+                </Label>
+                <Select value={statusClassFilter} onValueChange={setStatusClassFilter}>
+                  <SelectTrigger className="w-48 h-12 text-base">
+                    <SelectValue placeholder="Select urgency" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Todos Status</SelectItem>
+                    <SelectItem value="Aberto">Aberto</SelectItem>
+                    <SelectItem value="Em andamento">Em andamento</SelectItem>
+                    <SelectItem value="Conluído">Concluído</SelectItem>
+                    <SelectItem value="Cancelado">Cancelado</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
               {/* Urgency Filter Dropdown */}
               <div className="flex items-center gap-4">
                 <Label htmlFor="urgency-filter" className="text-lg font-medium">
