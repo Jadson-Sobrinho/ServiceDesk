@@ -262,7 +262,7 @@ const filteredTickets = tickets.filter((ticket) => {
                     </div>
                     <div>
                       <Label className="text-lg font-medium">Criado em:</Label>
-                      <p className="text-xl mt-2">{selectedTicket.createdAt}</p>
+                      <p className="text-xl mt-2">{selectedTicket.created_at}</p>
                     </div>
                   </div>
                   <div>
@@ -355,7 +355,7 @@ const filteredTickets = tickets.filter((ticket) => {
                           >  
                             {ticket.description}
                           </span></p>
-                        <p className="text-sm text-muted-foreground mt-3">Criado em: {ticket.createdAt}</p>
+                        <p className="text-sm text-muted-foreground mt-3">Criado em: {ticket.created_at}</p>
                       </div>
 
                       <div className="ml-4">

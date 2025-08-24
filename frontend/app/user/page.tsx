@@ -15,6 +15,7 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { User, LogOut, ArrowLeft, MessageCircle } from "lucide-react"
+const { DateTime } = require("luxon");
 
 
 export default function ServiceDeskPage() {
@@ -261,7 +262,7 @@ export default function ServiceDeskPage() {
                             {ticket.description}
                         </span> 
                       </p>
-                      <p className="text-sm text-muted-foreground">Criado em: {ticket.created_At}</p>
+                      <p className="text-sm text-muted-foreground">Criado em: {ticket.created_at}</p>
 
                       <div className="ml-250 transform -translate-y-20">
                         <Button
