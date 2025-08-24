@@ -51,26 +51,17 @@ export default function TicketChatPage() {
 
     if (ticketId) fetchTicket()
 
-    // Example messages only for development / empty state
     const exampleMessages: Message[] = [
       {
         id: "1",
-        sender: "Cliente",
-        content: "Olá, estou com problemas na minha conexão de internet. A velocidade está muito baixa.",
-        timestamp: "10:30",
-        isSupport: false,
-      },
-      {
-        id: "2",
         sender: "Suporte",
         content:
-          "Olá! Obrigado por entrar em contato. Vou verificar sua conexão. Pode me informar qual velocidade está medindo?",
-        timestamp: "10:35",
+          "Olá! Obrigado por entrar em contato. Em que posso lhe ajudar?",
+        timestamp: "10:00",
         isSupport: true,
       },
     ]
 
-    // Set examples only if there are no messages yet
     setMessages((prev) => (prev.length === 0 ? exampleMessages : prev))
 
     return () => {
