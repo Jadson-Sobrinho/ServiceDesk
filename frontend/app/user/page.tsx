@@ -15,7 +15,6 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { User, LogOut, ArrowLeft, MessageCircle } from "lucide-react"
-const { DateTime } = require("luxon");
 
 
 export default function ServiceDeskPage() {
@@ -32,37 +31,29 @@ export default function ServiceDeskPage() {
     urgency: "",
   })
 
-
-  useEffect(() => {
-  /**
-   * Em React 18 (dev mode com StrictMode), o useEffect roda duas vezes
-   * Em produção, não teria duplicidade
-   */
-  if (effectRan.current) return;
-  effectRan.current = true;
   
-    async function search() {
-      try {
-        const token = localStorage.getItem('authToken');
-        const response = await fetch("http://localhost:3001/ticket/user", {
-            headers: {
-              'Authorization': 'Bearer ' + token 
-            }
+  async function search() {
+    try {
+      const token = localStorage.getItem('authToken');
+      const response = await fetch("http://localhost:3001/ticket/user", {
+          headers: {
+            'Authorization': 'Bearer ' + token 
           }
-        );
-
-        if(!response.ok) {
-          console.log("Erro ao buscar tickets do usuario");
         }
-        const data = await response.json();
-        console.log(data);
-        setTickets(data);   
-      } catch (error) {
-        console.error(error);
-      }
-    }
+      );
 
-    async function getProfile() {
+      if(!response.ok) {
+        console.log("Erro ao buscar tickets do usuario");
+      }
+      const data = await response.json();
+      console.log(data);
+      setTickets(data);   
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  async function getProfile() {
     const token = localStorage.getItem('authToken');
     try {
       const response = await fetch("http://localhost:3001/auth/me", {
@@ -85,6 +76,14 @@ export default function ServiceDeskPage() {
     }
   }
 
+  useEffect(() => {
+  /**
+   * Em React 18 (dev mode com StrictMode), o useEffect roda duas vezes
+   * Em produção, não teria duplicidade
+   */
+  if (effectRan.current) return;
+  effectRan.current = true;
+  
   getProfile();
   search();
   }, []);
@@ -114,6 +113,9 @@ export default function ServiceDeskPage() {
       const result = await response.json();
       console.log("Ticket created successfully", result)
       
+      //Atualiza a lista de "Meus tickets assim que um ticket é criado"
+      await search();
+
     } catch (error) {
       console.error("Faild to create the ticket:", error);
     } finally {
