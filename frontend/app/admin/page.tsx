@@ -325,7 +325,7 @@ const filteredTickets = tickets.filter((ticket) => {
                     <SelectItem value="all">Todos Status</SelectItem>
                     <SelectItem value="Aberto">Aberto</SelectItem>
                     <SelectItem value="Em andamento">Em andamento</SelectItem>
-                    <SelectItem value="Conluído">Concluído</SelectItem>
+                    <SelectItem value="Concluído">Concluído</SelectItem>
                     <SelectItem value="Cancelado">Cancelado</SelectItem>
                   </SelectContent>
                 </Select>
@@ -348,6 +348,68 @@ const filteredTickets = tickets.filter((ticket) => {
                   </SelectContent>
                 </Select>
               </div>
+            </div>
+            {/**Status section filter */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
+              <Card
+                className={`cursor-pointer transition-all hover:shadow-md ${statusClassFilter === "Aberto" ? "ring-2 ring-gray-400" : ""}`}
+                onClick={() => setStatusClassFilter("Aberto")}
+              >
+                <CardContent className="p-6 text-center">
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-4 h-4 rounded-full bg-gray-300"></div>
+                    <h3 className="text-xl font-semibold">Aberto</h3>
+                    <p className="text-2xl font-bold text-gray-600">
+                      {tickets.filter((ticket) => ticket.status === "Aberto").length}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card
+                className={`cursor-pointer transition-all hover:shadow-md ${statusClassFilter === "Em andamento" ? "ring-2 ring-blue-400" : ""}`}
+                onClick={() => setStatusClassFilter("Em andamento")}
+              >
+                <CardContent className="p-6 text-center">
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-4 h-4 rounded-full bg-blue-500"></div>
+                    <h3 className="text-xl font-semibold">Em andamento</h3>
+                    <p className="text-2xl font-bold text-blue-600">
+                      {tickets.filter((ticket) => ticket.status === "Em andamento").length}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card
+                className={`cursor-pointer transition-all hover:shadow-md ${statusClassFilter === "Concluído" ? "ring-2 ring-green-400" : ""}`}
+                onClick={() => setStatusClassFilter("Concluído")}
+              >
+                <CardContent className="p-6 text-center">
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-4 h-4 rounded-full bg-green-500"></div>
+                    <h3 className="text-xl font-semibold">Concluído</h3>
+                    <p className="text-2xl font-bold text-green-600">
+                      {tickets.filter((ticket) => ticket.status === "Concluído").length}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
+
+              <Card
+                className={`cursor-pointer transition-all hover:shadow-md ${statusClassFilter === "Cancelado" ? "ring-2 ring-red-400" : ""}`}
+                onClick={() => setStatusClassFilter("Cancelado")}
+              >
+                <CardContent className="p-6 text-center">
+                  <div className="flex flex-col items-center gap-2">
+                    <div className="w-4 h-4 rounded-full bg-red-500"></div>
+                    <h3 className="text-xl font-semibold">Cancelado</h3>
+                    <p className="text-2xl font-bold text-red-600">
+                      {tickets.filter((ticket) => ticket.status === "Cancelado").length}
+                    </p>
+                  </div>
+                </CardContent>
+              </Card>
             </div>
 
             <div className="space-y-4">
