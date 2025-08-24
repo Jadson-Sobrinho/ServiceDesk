@@ -267,7 +267,13 @@ const filteredTickets = tickets.filter((ticket) => {
                   </div>
                   <div>
                     <Label className="text-lg font-medium">Descrição:</Label>
-                    <p className="text-xl mt-2 leading-relaxed">{selectedTicket.description}</p>
+                    <p className="text-xl mt-2 leading-relaxed">
+                      <span
+                        className="block w-full whitespace-normal break-words"
+                        title={selectedTicket.description}
+                        >
+                        {selectedTicket.description}
+                        </span></p>
                   </div>
                 </div>
 
@@ -342,7 +348,13 @@ const filteredTickets = tickets.filter((ticket) => {
                         </div>
                         <p className="text-xl font-medium text-primary mb-2">{ticket.user_id.name}</p>
                         <p className="text-base text-muted-foreground mb-2">{ticket.address}</p>
-                        <p className="text-base line-clamp-2">{ticket.description}</p>
+                        <p className="text-base line-clamp-2">
+                          <span
+                            className="ml-1 inline-block max-w-[24rem] truncate align-middle"
+                            title= {ticket.description}
+                          >  
+                            {ticket.description}
+                          </span></p>
                         <p className="text-sm text-muted-foreground mt-3">Criado em: {ticket.createdAt}</p>
                       </div>
 

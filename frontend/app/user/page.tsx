@@ -253,11 +253,17 @@ export default function ServiceDeskPage() {
                         <strong>Endereço:</strong> {ticket.address}
                       </p>
                       <p className="text-base">
-                        <strong>Descrição:</strong> {ticket.description}
+                        <strong>Descrição:</strong>
+                        <span
+                          className="ml-1 inline-block max-w-[24rem] truncate align-middle" 
+                          title={ticket.description}
+                          >
+                            {ticket.description}
+                        </span> 
                       </p>
                       <p className="text-sm text-muted-foreground">Criado em: {ticket.created_At}</p>
 
-                      <div className="ml-4">
+                      <div className="ml-250 transform -translate-y-20">
                         <Button
                           variant="outline"
                           size="lg"
