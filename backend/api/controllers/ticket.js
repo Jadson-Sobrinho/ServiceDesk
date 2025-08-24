@@ -1,4 +1,5 @@
 const ticketModel = require("../models/ticket");
+const { DateTime } = require("luxon");
 
 exports.getAllTickets = async (req, res) => {
     try {
@@ -50,11 +51,14 @@ exports.createTicket = async (req, res) => {
 
         } = req.body;
 
+        const now = DateTime.now().setZone("America/Sao_Paulo");
+
         const newTicket = new ticketModel({
             user_id: userId,
             address,
             description,
-            urgency_level
+            urgency_level,
+            created_at: now.toFormat("dd-MM-yyyy HH:mm")
         });
 
         const savedTicket = await newTicket.save();
