@@ -27,6 +27,9 @@ const ticketSchema = new mongoose.Schema({
         require: true
     },
     created_at: {
+        type: String
+    },
+    created_at_log: {
         type: Date,
         default: Date.now
     }
