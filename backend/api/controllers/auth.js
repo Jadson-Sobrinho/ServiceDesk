@@ -10,9 +10,7 @@ exports.login = async (req, res) => {
             return res.status(401).json({error: "Email is wrong"})
         }
 
-
-        //Tirar o user.password dps que tiver a rota de registro de usuario
-        const isMatch = await bcrypt.compare(password, user.password || user.hashed_password);
+        const isMatch = await bcrypt.compare(password, user.hashed_password);
         if (!isMatch) {
             return res.status(401).json({error: "Password is wrong"})
         }
