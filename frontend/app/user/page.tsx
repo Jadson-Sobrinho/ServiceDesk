@@ -18,6 +18,7 @@ import { User, LogOut, ArrowLeft, MessageCircle } from "lucide-react"
 
 
 export default function ServiceDeskPage() {
+  const token = sessionStorage.getItem("authToken");
   const effectRan = useRef(false);
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<any>(null)
@@ -34,7 +35,6 @@ export default function ServiceDeskPage() {
   
   async function search() {
     try {
-      const token = localStorage.getItem('authToken');
       const response = await fetch("http://localhost:3001/ticket/user", {
           headers: {
             'Authorization': 'Bearer ' + token 
@@ -54,7 +54,6 @@ export default function ServiceDeskPage() {
   }
 
   async function getProfile() {
-    const token = localStorage.getItem('authToken');
     try {
       const response = await fetch("http://localhost:3001/auth/me", {
         headers: {'Authorization': 'Bearer ' + token}
@@ -93,7 +92,6 @@ export default function ServiceDeskPage() {
     console.log("Ticket submitted:", formData)
 
     try {
-      const token = localStorage.getItem('authToken');
       setIsSubmitting(true);
       const response = await fetch("http://localhost:3001/ticket", {
         method: 'POST',
@@ -209,7 +207,7 @@ export default function ServiceDeskPage() {
                 </div>
                 <Button variant="destructive" className="w-full text-base" size="lg" 
                   onClick={() => {
-                    localStorage.removeItem("atuhToken");
+                    sessionStorage.removeItem("authToken");
                     window.location.href = '/'
                   }}>
                   <LogOut className="mr-2 h-5 w-5" />

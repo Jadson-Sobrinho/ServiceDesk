@@ -17,6 +17,7 @@ import { User, LogOut, ArrowLeft, Search, MessageCircle } from "lucide-react"
 
 
 export default function ServiceDeskPage() {
+  const token = sessionStorage.getItem("authToken");
   const effectRan = useRef(false);
   const router = useRouter();
   const [userInfo, setUserInfo] = useState<any>(null)
@@ -32,14 +33,6 @@ export default function ServiceDeskPage() {
     urgency: "",
   })
 
-useEffect(() => {
-  /**
-   * Em React 18 (dev mode com StrictMode), o useEffect roda duas vezes
-   * Em produção, não teria duplicidade
-   */
-  if (effectRan.current) return;
-  effectRan.current = true;
-
   async function search() {
     try {
       const response = await fetch("http://localhost:3001/ticket");
@@ -51,7 +44,6 @@ useEffect(() => {
   }
 
   async function getProfile() {
-    const token = localStorage.getItem('authToken');
     try {
       const response = await fetch("http://localhost:3001/auth/me", {
         headers: {'Authorization': 'Bearer ' + token}
@@ -72,6 +64,15 @@ useEffect(() => {
        console.error('Faild to load user info:', error);
     }
   }
+
+
+useEffect(() => {
+  /**
+   * Em React 18 (dev mode com StrictMode), o useEffect roda duas vezes
+   * Em produção, não teria duplicidade
+   */
+  if (effectRan.current) return;
+  effectRan.current = true;
 
   getProfile();
   search();
@@ -95,7 +96,6 @@ const filteredTickets = tickets.filter((ticket) => {
 
 
   const handleStatusUpdate = async (status: string) => {
-    const token = localStorage.getItem('authToken');
     if (selectedTicket) {
       try {
         const response = await fetch("http://localhost:3001/ticket/status", {
@@ -113,22 +113,12 @@ const filteredTickets = tickets.filter((ticket) => {
         if (!response.ok) {
           throw new Error('Faild to update ticket status.');
         }
+        search();
       } catch (error) {
         console.error('Faild to update ticket status:', error);
       }
       setSelectedTicket(null)
     }
-  }
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault()
-    console.log("Ticket submitted:", formData)
-    setFormData({ address: "", description: "", urgency: "" })
-    setShowTicketForm(false)
-  }
-
-  const handleInputChange = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
   const getStatusClass = (status: string) => {
@@ -215,7 +205,7 @@ const filteredTickets = tickets.filter((ticket) => {
                 </div>
                 <Button variant="destructive" className="w-full text-base" size="lg" 
                   onClick={() => {
-                    localStorage.removeItem("atuhToken");
+                    sessionStorage.removeItem("authToken");
                     window.location.href = '/'
                   }}>
                   <LogOut className="mr-2 h-5 w-5" />

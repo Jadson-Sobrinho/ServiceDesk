@@ -39,15 +39,15 @@ export default function LoginPage() {
 
       const user = await response.json();
       
-      //TODO: Armazenar token no cache com redis
-      localStorage.setItem('authToken', user.token);
-      localStorage.setItem('user', JSON.stringify(user.user))
+      sessionStorage.setItem('authToken', user.token);
 
       //TODO: Refatorar
       if (user.user.rule == "admin") {
         router.replace("/admin");
-      } else {
+      } else if (user.user.rule == "user"){
         router.replace("/user");
+      } else {
+        router.replace("/");
       }
 
       
