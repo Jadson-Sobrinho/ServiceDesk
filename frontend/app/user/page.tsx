@@ -167,12 +167,12 @@ export default function ServiceDeskPage() {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="border-b bg-card">
+      <nav className="border-b bg-card-foreground">
         <div className="flex items-center justify-between px-8 py-6">
-          <h1 className="text-3xl font-semibold text-foreground">ServiceDeskBA</h1>
+          <h1 className="text-3xl font-semibold text-muted">ServiceDeskBA</h1>
 
           <div className="flex items-center gap-6">
-            <Button variant="outline" onClick={() => setShowTicketsList(true)} size="lg" className="text-base">
+            <Button variant="outline" onClick={() => setShowTicketsList(true)} className="h-16 px-10 text-lg font-medium">
               Meus Tickets
             </Button>
 
@@ -295,15 +295,15 @@ export default function ServiceDeskPage() {
             </Button>
           </div>
         ) : (
-          <div className="max-w-4xl mx-auto">
-            <Card className="p-4">
-              <CardHeader className="pb-6">
-                <CardTitle className="text-3xl">Criar um Ticket</CardTitle>
+          <div className="max-w-5xl mx-auto">
+            <Card className="p-12">
+              <CardHeader className="pb-12">
+                <CardTitle className="text-4xl">Criar um Ticket</CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-8">
-                  <div className="space-y-3">
-                    <Label htmlFor="address" className="text-lg">
+                <form onSubmit={handleSubmit} className="space-y-10">
+                  <div className="space-y-4">
+                    <Label htmlFor="address" className="text-2xl">
                       Endereço
                     </Label>
                     <Input
@@ -313,59 +313,62 @@ export default function ServiceDeskPage() {
                       value={formData.address}
                       onChange={(e) => handleInputChange("address", e.target.value)}
                       required
-                      className="text-base h-12"
+                      className="text-lg h-14 px-4"
                     />
                   </div>
 
-                  <div className="space-y-3">
-                    <Label htmlFor="description" className="text-lg">
+                  <div className="space-y-4">
+                    <Label htmlFor="description" className="text-2xl">
                       Descrição
                     </Label>
                     <Textarea
                       id="description"
                       placeholder="Descreva seu problema em detalhes..."
-                      rows={6}
+                      rows={8}
                       value={formData.description}
                       onChange={(e) => handleInputChange("description", e.target.value)}
                       required
-                      className="text-base"
+                      className="text-lg p-4"
                     />
                   </div>
-              
-                  <div className="space-y-3">
-                    <Label htmlFor="urgency_level" className="text-lg">
+
+                  <div className="space-y-4">
+                    <Label htmlFor="urgency_level" className="text-2xl">
                       Nível de urgência
                     </Label>
-                    <Select onValueChange={(value) => handleInputChange("urgency_level", value)} required>
-                      <SelectTrigger className="text-base h-12">
+                    <Select
+                      onValueChange={(value) => handleInputChange("urgency_level", value)}
+                      required
+                    >
+                      <SelectTrigger className="text-lg h-14 px-4">
                         <SelectValue placeholder="Selecione o nível de urgência" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Baixo" className="text-base">
+                        <SelectItem value="Baixo" className="text-lg">
                           Baixo
                         </SelectItem>
-                        <SelectItem value="Médio" className="text-base">
+                        <SelectItem value="Médio" className="text-lg">
                           Médio
                         </SelectItem>
-                        <SelectItem value="Alto" className="text-base">
+                        <SelectItem value="Alto" className="text-lg">
                           Alto
                         </SelectItem>
-                        <SelectItem value="Crítico" className="text-base">
+                        <SelectItem value="Crítico" className="text-lg">
                           Crítico
                         </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div className="flex gap-4 pt-6">
-                    <Button type="submit" className="flex-1 text-lg h-12">
+                  <div className="flex gap-6 pt-8">
+                    <Button type="submit" className="flex-1 text-xl h-14">
                       Criar
                     </Button>
                     <Button
                       type="button"
                       variant="outline"
                       onClick={() => setShowTicketForm(false)}
-                      className="flex-1 text-lg h-12"
+                      className="flex-1 text-xl h-14"
                     >
                       Cancelar
                     </Button>
