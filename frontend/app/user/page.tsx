@@ -250,25 +250,29 @@ export default function ServiceDeskPage() {
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-3">
-                      <p className="text-base text-muted-foreground">
+                      <p className="text-xl text-muted-foreground">
                         <strong>Endereço:</strong> {ticket.address}
                       </p>
-                      <p className="text-base">
+
+                      <p className="text-xl">
                         <strong>Descrição:</strong>
                         <span
-                          className="ml-1 inline-block max-w-[24rem] truncate align-middle" 
+                          className="ml-1 inline-block max-w-[24rem] truncate align-middle text-xl"
                           title={ticket.description}
-                          >
-                            {ticket.description}
-                        </span> 
+                        >
+                          {ticket.description}
+                        </span>
                       </p>
-                      <p className="text-sm text-muted-foreground">Criado em: {ticket.created_at}</p>
+
+                      <p className="text-lg text-muted-foreground">
+                        Criado em: {ticket.created_at}
+                      </p>
 
                       <div className="ml-250 transform -translate-y-20">
                         <Button
                           variant="outline"
                           size="lg"
-                          className="h-12 w-12 p-0 bg-transparent"
+                          className="h-12 w-12 p-0 bg-gray-300"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleOpenChat(ticket)
@@ -313,7 +317,7 @@ export default function ServiceDeskPage() {
                       value={formData.address}
                       onChange={(e) => handleInputChange("address", e.target.value)}
                       required
-                      className="text-lg h-14 px-4"
+                      className="!text-xl !p-8"
                     />
                   </div>
 
@@ -328,7 +332,7 @@ export default function ServiceDeskPage() {
                       value={formData.description}
                       onChange={(e) => handleInputChange("description", e.target.value)}
                       required
-                      className="text-lg p-4"
+                      className="!text-xl !p-8"
                     />
                   </div>
 
