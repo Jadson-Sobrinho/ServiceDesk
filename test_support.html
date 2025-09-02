@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <title>Teste Chat</title>
+</head>
+<body>
+  <input id="msg" placeholder="Mensagem">
+  <button id="send">Enviar</button>
+  <ul id="messages"></ul>
+
+  <script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+  <script>
+    const socket = io("http://localhost:3001");
+
+    const conversationId = "64f77c0fb12c8c1234567899";
+
+    socket.emit("joinRoom", conversationId);
+
+    document.getElementById("send").onclick = () => {
+      const content = document.getElementById("msg").value;
+      socket.emit("chatMessage", {
+        conversationId,
+        sender: { id: "64f765eaf21b8c1234567890", role: "client" },
+        content
+      });
+      document.getElementById("msg").value = "";
+    };
+
+    socket.on("message", (msg) => {
+      const li = document.createElement("li");
+      li.textContent = `${msg.sender.role}: ${msg.content}`;
+      document.getElementById("messages").appendChild(li);
+    });
+  </script>
+</body>
+</html>

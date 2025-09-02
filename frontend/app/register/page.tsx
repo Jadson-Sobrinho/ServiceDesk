@@ -225,7 +225,7 @@ export default function RegisterPage() {
               type="submit"
               className="w-full h-14 text-lg font-semibold bg-blue-600 hover:bg-blue-700 transition-colors"
             >
-              Create Account
+              Criar conta
             </Button>
           </form>
 

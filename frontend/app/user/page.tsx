@@ -169,7 +169,7 @@ export default function ServiceDeskPage() {
       {/* Navigation */}
       <nav className="border-b bg-card-foreground">
         <div className="flex items-center justify-between px-8 py-6">
-          <h1 className="text-3xl font-semibold text-muted">ServiceDeskBA</h1>
+          <h1 className="text-3xl font-semibold text-muted">CallDesk</h1>
 
           <div className="flex items-center gap-6">
             <Button variant="outline" onClick={() => setShowTicketsList(true)} className="h-16 px-10 text-lg font-medium">

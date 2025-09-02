@@ -64,22 +64,22 @@ export default function LoginPage() {
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="space-y-2 text-center pb-8">
           <div className="mx-auto mb-4">
-            <h1 className="text-3xl font-bold">ServiceDeskBA</h1>
+            <h1 className="text-3xl font-bold">CallDesk</h1>
           </div>
-          <CardTitle className="text-2xl font-semibold text-gray-900">Welcome Back</CardTitle>
-          <CardDescription className="text-base text-gray-600">Sign in to your account to continue</CardDescription>
+          <CardTitle className="text-2xl font-semibold text-gray-900">Bem-vindo!</CardTitle>
+          <CardDescription className="text-base text-gray-600">Entre na sua conta para continuar</CardDescription>
         </CardHeader>
 
         <CardContent className="space-y-6">
           <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
               <Label htmlFor="email" className="text-base font-medium text-gray-700">
-                Email Address
+                Email
               </Label>
               <Input
                 id="email"
                 type="email"
-                placeholder="Enter your email"
+                placeholder="Insira seu email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -89,13 +89,13 @@ export default function LoginPage() {
 
             <div className="space-y-2">
               <Label htmlFor="password" className="text-base font-medium text-gray-700">
-                Password
+                Senha
               </Label>
               <div className="relative">
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
-                  placeholder="Enter your password"
+                  placeholder="Insira sua senha"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   required
@@ -118,12 +118,8 @@ export default function LoginPage() {
             </div>
 
             <div className="flex items-center justify-between text-sm">
-              <label className="flex items-center space-x-2 cursor-pointer">
-                <input type="checkbox" className="rounded border-gray-300 text-blue-600 focus:ring-blue-500" />
-                <span className="text-gray-600">Remember me</span>
-              </label>
               <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
-                Forgot password?
+                Esqueceu a senha?
               </a>
             </div>
 
@@ -132,14 +128,14 @@ export default function LoginPage() {
               className="w-full h-12 text-base font-semibold bg-blue-600 hover:bg-blue-700"
               disabled={isLoading}
             >
-              {isLoading ? "Signing in..." : "Sign In"}
+              {isLoading ? "Entrando..." : "Entrar"}
             </Button>
           </form>
 
           <div className="text-center text-sm text-gray-600">
-            Don't have an account?{" "}
-            <a href="#" className="text-blue-600 hover:text-blue-700 font-medium">
-              Contact your administrator
+            Não possui uma conta?{" "}
+            <a href="/register" className="text-blue-600 hover:text-blue-700 font-medium">
+              Crie uma conta
             </a>
           </div>
         </CardContent>

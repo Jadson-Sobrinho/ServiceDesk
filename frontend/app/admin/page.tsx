@@ -157,9 +157,9 @@ const filteredTickets = tickets.filter((ticket) => {
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
-      <nav className="border-b bg-card">
+      <nav className="border-b bg-card-foreground">
         <div className="flex items-center justify-between px-8 py-6">
-          <h1 className="text-3xl font-semibold text-foreground">ServiceDeskBA</h1>
+          <h1 className="text-3xl font-semibold text-muted">CallDesk</h1>
 
           <div className="flex-1 max-w-md mx-8">
             <div className="relative">
@@ -169,7 +169,7 @@ const filteredTickets = tickets.filter((ticket) => {
                 placeholder="Procurar por tickets..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="pl-10 text-base h-12"
+                className="pl-10 text-muted h-12"
               />
             </div>
           </div>
