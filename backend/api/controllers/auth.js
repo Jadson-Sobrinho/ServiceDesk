@@ -7,12 +7,12 @@ exports.login = async (req, res) => {
         const {email, password} = req.body;
         const user = await userModel.findOne({email});
         if (!user) {
-            return res.status(401).json({error: "Email is wrong"})
+            return res.status(401).json({error: "Email ou senha incorretas"});
         }
 
         const isMatch = await bcrypt.compare(password, user.hashed_password);
         if (!isMatch) {
-            return res.status(401).json({error: "Password is wrong"})
+            return res.status(401).json({error: "Email ou senha incorretas"});
         }
         
         const payload = {
@@ -25,11 +25,9 @@ exports.login = async (req, res) => {
 
         const token = jwt.sign(
             payload,
-            'Trocar esta chave depois',
+            process.env.JWT_SECRET,
             {expiresIn: '1h'}
         );
-
-        console.log(token);
         
         return res.json({
           token, 
@@ -53,7 +51,7 @@ exports.verifyToken = (req, res, next) => {
   }
 
   jwt.verify(
-    token, 'Trocar esta chave depois', (err, decoded) => {
+    token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
         console.error('Erro ao verificar token:', err);
         return res.status(403).json({ error: 'Token inválido ou expirado' });
