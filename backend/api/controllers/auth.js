@@ -56,7 +56,6 @@ exports.verifyToken = (req, res, next) => {
         console.error('Erro ao verificar token:', err);
         return res.status(403).json({ error: 'Token inválido ou expirado' });
       }
-      console.log('decoded JWT:', decoded);
       //Armazena o payload decodificado em req.user
       req.user = decoded;
       next();
@@ -65,7 +64,6 @@ exports.verifyToken = (req, res, next) => {
 };
 
 exports.getProfile = (req, res) => {
-  console.log(req.user);
   const {user_id, name, email, rule, phone_number} = req.user;
   return res.json({user_id, name, email, rule, phone_number});
 };
