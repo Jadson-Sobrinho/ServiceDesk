@@ -1,10 +1,7 @@
 "use client"
 
-import type React from "react"
-
-
 import { useRef, useEffect, useState } from "react"
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -13,13 +10,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { User, LogOut, ArrowLeft, Search, MessageCircle } from "lucide-react"
-
+import { User, LogOut, ArrowLeft, Search, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react"
 
 export default function ServiceDeskPage() {
-  const token = sessionStorage.getItem("authToken");
-  const effectRan = useRef(false);
-  const router = useRouter();
+  const token = sessionStorage.getItem("authToken")
+  const effectRan = useRef(false)
+  const router = useRouter()
   const [userInfo, setUserInfo] = useState<any>(null)
   const [tickets, setTickets] = useState<any[]>([])
   const [selectedTicket, setSelectedTicket] = useState<(typeof tickets)[0] | null>(null)
@@ -27,6 +23,8 @@ export default function ServiceDeskPage() {
   const [urgencyFilter, setUrgencyFilter] = useState("all")
   const [statusClassFilter, setStatusClassFilter] = useState("all")
   const [showTicketForm, setShowTicketForm] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [itemsPerPage] = useState(10)
   const [formData, setFormData] = useState({
     address: "",
     description: "",
@@ -35,51 +33,48 @@ export default function ServiceDeskPage() {
 
   async function search() {
     try {
-      const response = await fetch("http://localhost:3001/ticket");
-      const data = await response.json();
-      setTickets(data);   
+      const response = await fetch("http://localhost:3001/ticket")
+      const data = await response.json()
+      setTickets(data)
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
   }
 
   async function getProfile() {
     try {
       const response = await fetch("http://localhost:3001/auth/me", {
-        headers: {'Authorization': 'Bearer ' + token}
+        headers: { Authorization: "Bearer " + token },
+      })
 
-      });
+      console.log(response)
 
-      console.log(response);
-
-      if(!response.ok) {
-        throw new Error('Faild to search user info.');
+      if (!response.ok) {
+        throw new Error("Faild to search user info.")
       }
-      const userInfo = await response.json();
-      setUserInfo(userInfo);
-      console.log(userInfo);
+      const userInfo = await response.json()
+      setUserInfo(userInfo)
+      console.log(userInfo)
 
-      return userInfo;
+      return userInfo
     } catch (error) {
-       console.error('Faild to load user info:', error);
+      console.error("Faild to load user info:", error)
     }
   }
 
+  useEffect(() => {
+    /**
+     * Em React 18 (dev mode com StrictMode), o useEffect roda duas vezes
+     * Em produção, não teria duplicidade
+     */
+    if (effectRan.current) return
+    effectRan.current = true
 
-useEffect(() => {
-  /**
-   * Em React 18 (dev mode com StrictMode), o useEffect roda duas vezes
-   * Em produção, não teria duplicidade
-   */
-  if (effectRan.current) return;
-  effectRan.current = true;
+    getProfile()
+    search()
+  }, [])
 
-  getProfile();
-  search();
-}, []);
-
-
-const filteredTickets = tickets.filter((ticket) => {
+  const filteredTickets = tickets.filter((ticket) => {
     const matchesSearch =
       ticket.user_id.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
       ticket._id.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -87,35 +82,43 @@ const filteredTickets = tickets.filter((ticket) => {
 
     const matchesUrgency = urgencyFilter === "all" || ticket.urgency_level === urgencyFilter
 
-    const ticketStatus = ticket.status;
+    const ticketStatus = ticket.status
 
-    const matchesStatus = statusClassFilter === "all" || ticketStatus === statusClassFilter;
+    const matchesStatus = statusClassFilter === "all" || ticketStatus === statusClassFilter
 
     return matchesSearch && matchesUrgency && matchesStatus
   })
 
+  const totalPages = Math.ceil(filteredTickets.length / itemsPerPage)
+  const startIndex = (currentPage - 1) * itemsPerPage
+  const endIndex = startIndex + itemsPerPage
+  const paginatedTickets = filteredTickets.slice(startIndex, endIndex)
+
+  useEffect(() => {
+    setCurrentPage(1)
+  }, [searchQuery, urgencyFilter, statusClassFilter])
 
   const handleStatusUpdate = async (status: string) => {
     if (selectedTicket) {
       try {
         const response = await fetch("http://localhost:3001/ticket/status", {
-          method: 'PATCH',
+          method: "PATCH",
           headers: {
-            'Content-Type': 'application/json',
-            'Authorization': 'Bearer ' + token
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + token,
           },
           body: JSON.stringify({
             _id: selectedTicket._id,
-            status: status
-          })
-        });
+            status: status,
+          }),
+        })
 
         if (!response.ok) {
-          throw new Error('Faild to update ticket status.');
+          throw new Error("Faild to update ticket status.")
         }
-        search();
+        search()
       } catch (error) {
-        console.error('Faild to update ticket status:', error);
+        console.error("Faild to update ticket status:", error)
       }
       setSelectedTicket(null)
     }
@@ -139,7 +142,7 @@ const filteredTickets = tickets.filter((ticket) => {
   const getUrgencyClass = (urgency_level: string) => {
     switch (urgency_level) {
       case "Crítico":
-        return "bg-red-600 text-white" 
+        return "bg-red-600 text-white"
       case "Alto":
         return "bg-orange-500 text-white"
       case "Médio":
@@ -152,8 +155,25 @@ const filteredTickets = tickets.filter((ticket) => {
   }
 
   const handleOpenChat = (ticket: any) => {
-    router.push(`/chatSupport/${ticket._id}`);
+    router.push(`/chatSupport/${ticket._id}`)
   }
+
+  const goToPage = (page: number) => {
+    setCurrentPage(page)
+  }
+
+  const goToPreviousPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1)
+    }
+  }
+
+  const goToNextPage = () => {
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1)
+    }
+  }
+
   return (
     <div className="min-h-screen bg-background">
       {/* Navigation */}
@@ -203,11 +223,15 @@ const filteredTickets = tickets.filter((ticket) => {
                     <p className="text-base text-muted-foreground">{userInfo?.email}</p>
                   </div>
                 </div>
-                <Button variant="destructive" className="w-full text-base" size="lg" 
+                <Button
+                  variant="destructive"
+                  className="w-full text-base"
+                  size="lg"
                   onClick={() => {
-                    sessionStorage.removeItem("authToken");
-                    window.location.href = '/'
-                  }}>
+                    sessionStorage.removeItem("authToken")
+                    window.location.href = "/"
+                  }}
+                >
                   <LogOut className="mr-2 h-5 w-5" />
                   Logout
                 </Button>
@@ -263,12 +287,10 @@ const filteredTickets = tickets.filter((ticket) => {
                   <div>
                     <Label className="text-lg font-medium">Descrição:</Label>
                     <p className="text-xl mt-2 leading-relaxed">
-                      <span
-                        className="block w-full whitespace-normal break-words"
-                        title={selectedTicket.description}
-                        >
+                      <span className="block w-full whitespace-normal break-words" title={selectedTicket.description}>
                         {selectedTicket.description}
-                        </span></p>
+                      </span>
+                    </p>
                   </div>
                 </div>
 
@@ -402,8 +424,18 @@ const filteredTickets = tickets.filter((ticket) => {
               </Card>
             </div>
 
+            <div className="flex items-center justify-between mb-6">
+              <div className="text-lg text-muted-foreground">
+                Mostrando {startIndex + 1}-{Math.min(endIndex, filteredTickets.length)} de {filteredTickets.length}{" "}
+                tickets
+              </div>
+              <div className="text-lg text-muted-foreground">
+                Página {currentPage} de {totalPages}
+              </div>
+            </div>
+
             <div className="space-y-4">
-              {filteredTickets.map((ticket) => (
+              {paginatedTickets.map((ticket) => (
                 <Card
                   key={ticket._id}
                   className="p-4 cursor-pointer hover:shadow-md transition-shadow"
@@ -426,10 +458,11 @@ const filteredTickets = tickets.filter((ticket) => {
                         <p className="text-base line-clamp-2">
                           <span
                             className="ml-1 inline-block max-w-[24rem] truncate align-middle"
-                            title= {ticket.description}
-                          >  
+                            title={ticket.description}
+                          >
                             {ticket.description}
-                          </span></p>
+                          </span>
+                        </p>
                         <p className="text-sm text-muted-foreground mt-3">Criado em: {ticket.created_at}</p>
                       </div>
 
@@ -443,7 +476,7 @@ const filteredTickets = tickets.filter((ticket) => {
                             handleOpenChat(ticket)
                           }}
                         >
-                          <MessageCircle className="h-5 w-5"/>
+                          <MessageCircle className="h-5 w-5" />
                         </Button>
                       </div>
                     </div>
@@ -451,6 +484,46 @@ const filteredTickets = tickets.filter((ticket) => {
                 </Card>
               ))}
             </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-8">
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={goToPreviousPage}
+                  disabled={currentPage === 1}
+                  className="h-12 px-4 bg-transparent"
+                >
+                  <ChevronLeft className="h-5 w-5 mr-2" />
+                  Anterior
+                </Button>
+
+                <div className="flex gap-2">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      size="lg"
+                      onClick={() => goToPage(page)}
+                      className="h-12 w-12"
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="lg"
+                  onClick={goToNextPage}
+                  disabled={currentPage === totalPages}
+                  className="h-12 px-4 bg-transparent"
+                >
+                  Próximo
+                  <ChevronRight className="h-5 w-5 ml-2" />
+                </Button>
+              </div>
+            )}
 
             {filteredTickets.length === 0 && (
               <div className="text-center py-12">

@@ -2,9 +2,8 @@
 
 import type React from "react"
 
-
 import { useRef, useEffect, useState } from "react"
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -14,112 +13,108 @@ import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
-import { User, LogOut, ArrowLeft, MessageCircle } from "lucide-react"
-
+import { User, LogOut, ArrowLeft, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react"
 
 export default function ServiceDeskPage() {
-  const token = sessionStorage.getItem("authToken");
-  const effectRan = useRef(false);
-  const router = useRouter();
+  const token = sessionStorage.getItem("authToken")
+  const effectRan = useRef(false)
+  const router = useRouter()
   const [userInfo, setUserInfo] = useState<any>(null)
   const [tickets, setTickets] = useState<any[]>([])
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false)
   const [showTicketForm, setShowTicketForm] = useState(false)
   const [showTicketsList, setShowTicketsList] = useState(false)
+  const [currentPage, setCurrentPage] = useState(1)
+  const [ticketsPerPage] = useState(10)
   const [formData, setFormData] = useState({
     address: "",
     description: "",
     urgency: "",
   })
 
-  
   async function search() {
     try {
       const response = await fetch("http://localhost:3001/ticket/user", {
-          headers: {
-            'Authorization': 'Bearer ' + token 
-          }
-        }
-      );
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      })
 
-      if(!response.ok) {
-        console.log("Erro ao buscar tickets do usuario");
+      if (!response.ok) {
+        console.log("Erro ao buscar tickets do usuario")
       }
-      const data = await response.json();
-      console.log(data);
-      setTickets(data);   
+      const data = await response.json()
+      console.log(data)
+      setTickets(data)
+      setCurrentPage(1) // Reset to first page when tickets are refreshed
     } catch (error) {
-      console.error(error);
+      console.error(error)
     }
   }
 
   async function getProfile() {
     try {
       const response = await fetch("http://localhost:3001/auth/me", {
-        headers: {'Authorization': 'Bearer ' + token}
+        headers: { Authorization: "Bearer " + token },
+      })
 
-      });
+      console.log(response)
 
-      console.log(response);
-
-      if(!response.ok) {
-        throw new Error('Faild to search user info.');
+      if (!response.ok) {
+        throw new Error("Faild to search user info.")
       }
-      const userInfo = await response.json();
-      setUserInfo(userInfo);
-      console.log(userInfo);
+      const userInfo = await response.json()
+      setUserInfo(userInfo)
+      console.log(userInfo)
 
-      return userInfo;
+      return userInfo
     } catch (error) {
-       console.error('Faild to load user info:', error);
+      console.error("Faild to load user info:", error)
     }
   }
 
   useEffect(() => {
-  /**
-   * Em React 18 (dev mode com StrictMode), o useEffect roda duas vezes
-   * Em produção, não teria duplicidade
-   */
-  if (effectRan.current) return;
-  effectRan.current = true;
-  
-  getProfile();
-  search();
-  }, []);
+    /**
+     * Em React 18 (dev mode com StrictMode), o useEffect roda duas vezes
+     * Em produção, não teria duplicidade
+     */
+    if (effectRan.current) return
+    effectRan.current = true
+
+    getProfile()
+    search()
+  }, [])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     console.log("Ticket submitted:", formData)
 
     try {
-      setIsSubmitting(true);
+      setIsSubmitting(true)
       const response = await fetch("http://localhost:3001/ticket", {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer ' + token
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
         },
-        body: JSON.stringify(formData)
-      });
+        body: JSON.stringify(formData),
+      })
 
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(`Erro ${response.status}: ${errorText}`);
-        
+        const errorText = await response.text()
+        throw new Error(`Erro ${response.status}: ${errorText}`)
       }
 
-      const result = await response.json();
+      const result = await response.json()
       console.log("Ticket created successfully", result)
-      
-      //Atualiza a lista de "Meus tickets assim que um ticket é criado"
-      await search();
 
+      //Atualiza a lista de "Meus tickets assim que um ticket é criado"
+      await search()
     } catch (error) {
-      console.error("Faild to create the ticket:", error);
+      console.error("Faild to create the ticket:", error)
     } finally {
-      setIsSubmitting(false);
+      setIsSubmitting(false)
     }
-  
 
     // Reset form and hide it
     setFormData({ address: "", description: "", urgency: "" })
@@ -148,7 +143,7 @@ export default function ServiceDeskPage() {
   const getUrgencyClass = (urgency_level: string) => {
     switch (urgency_level) {
       case "Crítico":
-        return "bg-red-600 text-white" 
+        return "bg-red-600 text-white"
       case "Alto":
         return "bg-orange-500 text-white"
       case "Médio":
@@ -161,7 +156,24 @@ export default function ServiceDeskPage() {
   }
 
   const handleOpenChat = (ticket: any) => {
-    router.push(`/chatClient/${ticket._id}`);
+    router.push(`/chatClient/${ticket._id}`)
+  }
+
+  const indexOfLastTicket = currentPage * ticketsPerPage
+  const indexOfFirstTicket = indexOfLastTicket - ticketsPerPage
+  const currentTickets = tickets.slice(indexOfFirstTicket, indexOfLastTicket)
+  const totalPages = Math.ceil(tickets.length / ticketsPerPage)
+
+  const handlePageChange = (pageNumber: number) => {
+    setCurrentPage(pageNumber)
+  }
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1))
+  }
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages))
   }
 
   return (
@@ -172,50 +184,59 @@ export default function ServiceDeskPage() {
           <h1 className="text-3xl font-semibold text-muted">CallDesk</h1>
 
           <div className="flex items-center gap-6">
-            <Button variant="outline" onClick={() => setShowTicketsList(true)} className="h-16 px-10 text-lg font-medium">
+            <Button
+              variant="outline"
+              onClick={() => setShowTicketsList(true)}
+              className="h-16 px-10 text-lg font-medium"
+            >
               Meus Tickets
             </Button>
 
             {/* User Avatar with Modal */}
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="ghost" className="p-0">
-                <Avatar className="h-12 w-12">
-                  <AvatarImage src="/profile-icon.png?height=48&width=48" />
-                  <AvatarFallback>
-                    <User className="h-6 w-6" />
-                  </AvatarFallback>
-                </Avatar>
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-lg">
-              <DialogHeader>
-                <DialogTitle className="text-xl">User Profile</DialogTitle>
-              </DialogHeader>
-              <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <Avatar className="h-16 w-16">
-                    <AvatarImage src="/placeholder.svg?height=64&width=64" />
+
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button variant="ghost" className="p-0">
+                  <Avatar className="h-12 w-12">
+                    <AvatarImage src="/profile-icon.png?height=48&width=48" />
                     <AvatarFallback>
-                      <User className="h-8 w-8" />
+                      <User className="h-6 w-6" />
                     </AvatarFallback>
                   </Avatar>
-                  <div>
-                    <p className="font-medium text-lg">{userInfo?.name}</p>
-                    <p className="text-base text-muted-foreground">{userInfo?.email}</p>
-                  </div>
-                </div>
-                <Button variant="destructive" className="w-full text-base" size="lg" 
-                  onClick={() => {
-                    sessionStorage.removeItem("authToken");
-                    window.location.href = '/'
-                  }}>
-                  <LogOut className="mr-2 h-5 w-5" />
-                  Logout
                 </Button>
-              </div>
-            </DialogContent>
-          </Dialog>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-lg">
+                <DialogHeader>
+                  <DialogTitle className="text-xl">User Profile</DialogTitle>
+                </DialogHeader>
+                <div className="space-y-6">
+                  <div className="flex items-center gap-4">
+                    <Avatar className="h-16 w-16">
+                      <AvatarImage src="/placeholder.svg?height=64&width=64" />
+                      <AvatarFallback>
+                        <User className="h-8 w-8" />
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="font-medium text-lg">{userInfo?.name}</p>
+                      <p className="text-base text-muted-foreground">{userInfo?.email}</p>
+                    </div>
+                  </div>
+                  <Button
+                    variant="destructive"
+                    className="w-full text-base"
+                    size="lg"
+                    onClick={() => {
+                      sessionStorage.removeItem("authToken")
+                      window.location.href = "/"
+                    }}
+                  >
+                    <LogOut className="mr-2 h-5 w-5" />
+                    Logout
+                  </Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
       </nav>
@@ -230,10 +251,13 @@ export default function ServiceDeskPage() {
                 Voltar
               </Button>
               <h2 className="text-4xl font-semibold">Meus Tickets</h2>
+              <span className="text-lg text-muted-foreground">
+                ({tickets.length} {tickets.length === 1 ? "ticket" : "tickets"})
+              </span>
             </div>
 
             <div className="space-y-6">
-              {tickets.map((ticket) => (
+              {currentTickets.map((ticket) => (
                 <Card key={ticket._id} className="p-2">
                   <CardHeader className="pb-4">
                     <div className="flex items-center justify-between">
@@ -264,9 +288,7 @@ export default function ServiceDeskPage() {
                         </span>
                       </p>
 
-                      <p className="text-lg text-muted-foreground">
-                        Criado em: {ticket.created_at}
-                      </p>
+                      <p className="text-lg text-muted-foreground">Criado em: {ticket.created_at}</p>
 
                       <div className="ml-250 transform -translate-y-20">
                         <Button
@@ -278,15 +300,73 @@ export default function ServiceDeskPage() {
                             handleOpenChat(ticket)
                           }}
                         >
-                          <MessageCircle className="h-5 w-5"/>
+                          <MessageCircle className="h-5 w-5" />
                         </Button>
                       </div>
-
                     </div>
                   </CardContent>
                 </Card>
               ))}
+
+              {currentTickets.length === 0 && tickets.length > 0 && (
+                <div className="text-center py-8">
+                  <p className="text-lg text-muted-foreground">Nenhum ticket encontrado nesta página.</p>
+                </div>
+              )}
+
+              {tickets.length === 0 && (
+                <div className="text-center py-8">
+                  <p className="text-lg text-muted-foreground">Você ainda não possui tickets.</p>
+                </div>
+              )}
             </div>
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-center gap-2 mt-8">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handlePreviousPage}
+                  disabled={currentPage === 1}
+                  className="h-10 w-10 p-0 bg-transparent"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                </Button>
+
+                <div className="flex gap-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNumber) => (
+                    <Button
+                      key={pageNumber}
+                      variant={currentPage === pageNumber ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => handlePageChange(pageNumber)}
+                      className="h-10 w-10 p-0"
+                    >
+                      {pageNumber}
+                    </Button>
+                  ))}
+                </div>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleNextPage}
+                  disabled={currentPage === totalPages}
+                  className="h-10 w-10 p-0 bg-transparent"
+                >
+                  <ChevronRight className="h-4 w-4" />
+                </Button>
+              </div>
+            )}
+
+            {totalPages > 1 && (
+              <div className="text-center mt-4">
+                <p className="text-sm text-muted-foreground">
+                  Página {currentPage} de {totalPages} • Mostrando {indexOfFirstTicket + 1}-
+                  {Math.min(indexOfLastTicket, tickets.length)} de {tickets.length} tickets
+                </p>
+              </div>
+            )}
           </div>
         ) : !showTicketForm ? (
           <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8">
@@ -340,10 +420,7 @@ export default function ServiceDeskPage() {
                     <Label htmlFor="urgency_level" className="text-2xl">
                       Nível de urgência
                     </Label>
-                    <Select
-                      onValueChange={(value) => handleInputChange("urgency_level", value)}
-                      required
-                    >
+                    <Select onValueChange={(value) => handleInputChange("urgency_level", value)} required>
                       <SelectTrigger className="text-lg h-14 px-4">
                         <SelectValue placeholder="Selecione o nível de urgência" />
                       </SelectTrigger>
