@@ -35,6 +35,8 @@ const ticketSchema = new mongoose.Schema({
     }
 });
 
+ticketSchema.index({ user_id: 1 });
+
 const ticket = mongoose.model('ticket', ticketSchema, 'ticket');
 
 module.exports = ticket;
