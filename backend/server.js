@@ -6,7 +6,7 @@ const http = require("http");
 const { Server } = require("socket.io");
 const chatSocket = require("./api/socket/chat");
 
-const PORT = 3001;
+const PORT = process.env.PORT;
 
 async function startServer() {
     await ConnectToDataBase();
