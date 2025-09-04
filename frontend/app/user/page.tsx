@@ -41,10 +41,9 @@ export default function ServiceDeskPage() {
       })
 
       if (!response.ok) {
-        console.log("Erro ao buscar tickets do usuario")
+        throw new Error("Faild to get user ticket.")
       }
       const data = await response.json()
-      console.log(data)
       setTickets(data)
       setCurrentPage(1) // Reset to first page when tickets are refreshed
     } catch (error) {
@@ -58,14 +57,11 @@ export default function ServiceDeskPage() {
         headers: { Authorization: "Bearer " + token },
       })
 
-      console.log(response)
-
       if (!response.ok) {
         throw new Error("Faild to search user info.")
       }
       const userInfo = await response.json()
       setUserInfo(userInfo)
-      console.log(userInfo)
 
       return userInfo
     } catch (error) {
@@ -74,12 +70,11 @@ export default function ServiceDeskPage() {
   }
 
   useEffect(() => {
-    /**
-     * Em React 18 (dev mode com StrictMode), o useEffect roda duas vezes
-     * Em produção, não teria duplicidade
-     */
-    if (effectRan.current) return
-    effectRan.current = true
+
+    if(!token) {
+      router.replace("/unauthorized");
+    }
+
 
     getProfile()
     search()

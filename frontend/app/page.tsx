@@ -47,7 +47,7 @@ export default function LoginPage() {
       } else if (user.user.rule == "user"){
         router.replace("/user");
       } else {
-        router.replace("/");
+        router.replace("/unauthorized");
       }
 
       

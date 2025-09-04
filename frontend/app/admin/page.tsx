@@ -65,12 +65,10 @@ export default function ServiceDeskPage() {
   }
 
   useEffect(() => {
-    /**
-     * Em React 18 (dev mode com StrictMode), o useEffect roda duas vezes
-     * Em produção, não teria duplicidade
-     */
-    if (effectRan.current) return
-    effectRan.current = true
+    
+    if(!token) {
+      router.replace("/unauthorized");
+    }
 
     getProfile()
     search()
