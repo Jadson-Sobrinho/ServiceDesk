@@ -1,31 +1,30 @@
-// api/socket/chat.js
 const mongoose = require('mongoose');
 const chatModel = require("../models/chat");
 
+//TODO: Validar se o usuário realmente pertence àquela conversa
+//TODO: Normalizar o campo rule como role
+
 module.exports = (io) => {
   io.on("connection", (socket) => {
-    console.log("User connected:", socket.id);
 
     socket.on("joinRoom", async (conversationId) => {
       if (!conversationId) return;
 
       socket.join(conversationId);
-      console.log(`User ${socket.id} entered room ${conversationId}`);
 
       try {
-        const chatHistory = await chatModel.findById(conversationId).lean();
+        const chatHistory = await chatModel.findById(conversationId).lean().slice(-50);
         if (chatHistory && chatHistory.messages) {
           socket.emit("chatHistory", chatHistory.messages);
         }
       } catch (error) {
-        console.log("Faild to get chat history", error);
+        console.error("Failed to get chat history", error);
       }
     });
 
     // Recebe: (payload, callback?)
     socket.on("chatMessage", async (payload, callback) => {
       // payload esperado: { conversationId, sender, content }
-      console.log("chatMessage recebido no servidor:", payload);
 
       const { conversationId, sender, content } = payload || {};
 
@@ -48,12 +47,12 @@ module.exports = (io) => {
         senderRole = (sender.role || sender.rule || "client").toString().toLowerCase();
       }
 
-      const senderObjForSave = { rule: senderRole }; // mantenho 'rule' se seu schema atual usa 'rule'
+      const senderObjForSave = { rule: senderRole };
       if (sender && typeof sender === "object" && sender.id) {
         if (mongoose.isValidObjectId(sender.id)) {
           senderObjForSave.id = new mongoose.Types.ObjectId(sender.id);
         } else {
-          // se id não é ObjectId (string qualquer), pode salvar como está
+          // se id não é ObjectId (string qualquer), salvar como está
           senderObjForSave.id = sender.id;
         }
       }
@@ -87,7 +86,6 @@ module.exports = (io) => {
         }
 
         // O subdocumento salvo estará no array messages do documento retornado.
-        // Pegamos a última mensagem (a que acabamos de inserir).
         const savedMessages = updated.messages || [];
         const savedMessage = savedMessages[savedMessages.length - 1];
 
@@ -108,18 +106,14 @@ module.exports = (io) => {
         // Emite para a sala (todos conectados)
         io.to(conversationId).emit("message", serverMessage);
 
-        console.log(`Mensagem salva e emitida na conversa ${conversationId}`);
-
         // Ack para o emissor (se forneceu callback)
         if (typeof callback === 'function') callback(null, serverMessage);
       } catch (err) {
-        console.error("Erro ao salvar mensagem:", err);
         if (typeof callback === 'function') callback({ message: "internal_error", error: String(err) });
       }
     });
 
     socket.on("disconnect", () => {
-      console.log("User disconnected", socket.id);
     });
   });
 };

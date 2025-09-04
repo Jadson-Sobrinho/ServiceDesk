@@ -36,7 +36,6 @@ exports.login = async (req, res) => {
 
 
     } catch (error) {
-        console.error('Faild to log in:', error);
         return res.status(500).json({ error: 'Server error' });
     }
 }
@@ -53,7 +52,6 @@ exports.verifyToken = (req, res, next) => {
   jwt.verify(
     token, process.env.JWT_SECRET, (err, decoded) => {
       if (err) {
-        console.error('Erro ao verificar token:', err);
         return res.status(403).json({ error: 'Token inválido ou expirado' });
       }
       //Armazena o payload decodificado em req.user

@@ -21,7 +21,6 @@ exports.register = async (req, res) => {
         res.status(201).json({ message: "Usuário registrado com sucesso!", name: savedUser.name });
 
     } catch (error) {
-        console.error(error);
         return res.status(500).json({message: "Faild to create a new user"});
     }
 };

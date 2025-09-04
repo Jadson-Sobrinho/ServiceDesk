@@ -74,7 +74,6 @@ exports.UpdateTicketStatus = async (req, res) => {
     try {
         const {_id, status} = req.body;
         
-        console.log(_id, status);
         await ticketModel.findByIdAndUpdate(
             _id,
             {
@@ -85,7 +84,6 @@ exports.UpdateTicketStatus = async (req, res) => {
 
         return res.status(200).json({ message: 'Operação concluída sucesso.' });
     } catch (error) {
-        console.error(error);
         res.status(500).json({error: "Faild to update ticket status (controller)"});
     }
 };
