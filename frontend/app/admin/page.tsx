@@ -33,7 +33,12 @@ export default function ServiceDeskPage() {
 
   async function search() {
     try {
-      const response = await fetch("http://localhost:3001/ticket")
+      const response = await fetch("http://localhost:3001/ticket", {
+        headers: {Authorization: "Bearer " + token},
+      })
+      if (!response.ok) {
+        throw new Error("Faild to search for tickets.")
+      }
       const data = await response.json()
       setTickets(data)
     } catch (error) {
@@ -47,14 +52,11 @@ export default function ServiceDeskPage() {
         headers: { Authorization: "Bearer " + token },
       })
 
-      console.log(response)
-
       if (!response.ok) {
         throw new Error("Faild to search user info.")
       }
       const userInfo = await response.json()
       setUserInfo(userInfo)
-      console.log(userInfo)
 
       return userInfo
     } catch (error) {
