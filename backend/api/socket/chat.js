@@ -13,7 +13,7 @@ module.exports = (io) => {
       socket.join(conversationId);
 
       try {
-        const chatHistory = await chatModel.findById(conversationId).lean().slice(-50);
+        const chatHistory = await chatModel.findById(conversationId).lean();
         if (chatHistory && chatHistory.messages) {
           socket.emit("chatHistory", chatHistory.messages);
         }
