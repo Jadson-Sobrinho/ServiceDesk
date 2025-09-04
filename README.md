@@ -254,30 +254,30 @@ Authorization: Bearer <token>
 
 ```json
 {
-"_id": "64f9b8c2e5a1c6a999888777",
-"client": {
-"id": "64f9b8c2e5a1c6a123456789",
-"name": "Maria Silva",
-"email": "maria@empresa.com"
-},
-"support": {
-"id": "64f9b8c2e5a1c6a987654321",
-"name": "Carlos Souza",
-"email": "carlos@empresa.com"
-},
-"status": "open",
-"created_at": "2025-09-04T10:00:00.000Z",
-"closed_at": null,
-"messages": [
-{
-"sender": {
-"id": "64f9b8c2e5a1c6a123456789",
-"rule": "client"
-},
-"content": "Olá, estou com problema no login.",
-"created_at": "2025-09-04T10:05:00.000Z"
-}
-]
+  "_id": "64f9b8c2e5a1c6a999888777",
+  "client": {
+    "id": "64f9b8c2e5a1c6a123456789",
+    "name": "Maria Silva",
+    "email": "maria@empresa.com"
+  },
+  "support": {
+    "id": "64f9b8c2e5a1c6a987654321",
+    "name": "Carlos Souza",
+    "email": "carlos@empresa.com"
+  },
+  "status": "open",
+  "created_at": "2025-09-04T10:00:00.000Z",
+  "closed_at": null,
+  "messages": [
+    {
+      "sender": {
+      "id": "64f9b8c2e5a1c6a123456789",
+      "rule": "client"
+      },
+      "content": "Olá, estou com problema no login.",
+      "created_at": "2025-09-04T10:05:00.000Z"
+    }
+  ]
 }
 ```
 
