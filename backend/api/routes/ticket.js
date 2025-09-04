@@ -4,11 +4,11 @@ const ticketController = require("../controllers/ticket");
 const auth = require("../controllers/auth");
 
 
-router.get('/', ticketController.getAllTickets);
+router.get('/', auth.verifyToken, ticketController.getAllTickets);
 
 router.get('/user', auth.verifyToken, ticketController.getUserTickets);
 
-router.get('/:id', ticketController.getTicketById);
+router.get('/:id', auth.verifyToken, ticketController.getTicketById);
 
 router.post('/', auth.verifyToken, ticketController.createTicket);
 
