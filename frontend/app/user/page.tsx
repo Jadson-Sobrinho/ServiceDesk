@@ -116,7 +116,8 @@ export default function ServiceDeskPage() {
       console.log("Ticket created successfully", result)
 
       //Atualiza a lista de "Meus tickets assim que um ticket é criado"
-      await search()
+      search()
+      getProfile()
     } catch (error) {
       console.error("Faild to create the ticket:", error)
     } finally {
