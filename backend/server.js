@@ -20,8 +20,8 @@ async function startServer() {
     // Configura chat em tempo real
     chatSocket(io);
 
-    server.listen(PORT, () => {
-        console.log(`Servidor Rodando em http://localhost:${PORT}`);
+    server.listen(PORT, '0.0.0.0', () => {
+        console.log(`Servidor Rodando em:${PORT}`);
     });
 }
 

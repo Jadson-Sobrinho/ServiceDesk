@@ -35,7 +35,7 @@ export default function ServiceDeskPage() {
 
   async function search() {
     try {
-      const response = await fetch("http://localhost:3001/ticket/user", {
+      const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/ticket/user", {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -54,7 +54,7 @@ export default function ServiceDeskPage() {
 
   async function getProfile() {
     try {
-      const response = await fetch("http://localhost:3001/auth/me", {
+      const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/auth/me", {
         headers: { Authorization: "Bearer " + token },
       })
 
@@ -98,7 +98,7 @@ export default function ServiceDeskPage() {
 
     try {
       setIsSubmitting(true)
-      const response = await fetch("http://localhost:3001/ticket", {
+      const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/ticket", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
