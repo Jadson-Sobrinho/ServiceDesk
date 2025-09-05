@@ -14,7 +14,12 @@ import { User, LogOut, ArrowLeft, Search, MessageCircle, ChevronLeft, ChevronRig
 
 export default function ServiceDeskPage() {
   const BASE = process.env.NEXT_PUBLIC_API_URL;
-  const [token, setToken] = useState<string | null>(null);
+    const [token, setToken] = useState(() => {
+      if (typeof window !== "undefined") {
+        return window.sessionStorage.getItem("authToken")
+      }
+      return null
+    })
   const [loading, setLoading] = useState(true);
   const effectRan = useRef(false)
   const router = useRouter()
@@ -68,15 +73,8 @@ export default function ServiceDeskPage() {
 
   useEffect(() => {
     try {
-      const stored = window.sessionStorage.getItem("authToken");
-      if (!stored) {
-        // sem token: redireciona para login
-        router.replace("/");
-        return;
-      }
-
-      // temos token -> salva no estado e segue
-      setToken(stored);
+      getProfile();
+      search();
     } catch (error) {
       // qualquer erro na leitura: enviar para login
       console.error("Erro lendo sessionStorage:", error);
@@ -85,10 +83,7 @@ export default function ServiceDeskPage() {
     } finally {
       setLoading(false);
     }
-
-    getProfile()
-    search()
-  }, [router])
+  }, [token, router])
 
   const filteredTickets = tickets.filter((ticket) => {
     const matchesSearch =
