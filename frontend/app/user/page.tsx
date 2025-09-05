@@ -16,14 +16,14 @@ import { Badge } from "@/components/ui/badge"
 import { User, LogOut, ArrowLeft, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react"
 
 export default function ServiceDeskPage() {
-  const BASE = process.env.NEXT_PUBLIC_API_URL;
+  const BASE = process.env.NEXT_PUBLIC_API_URL
   const [token, setToken] = useState(() => {
     if (typeof window !== "undefined") {
       return window.sessionStorage.getItem("authToken")
     }
     return null
   })
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true)
   const effectRan = useRef(false)
   const router = useRouter()
   const [userInfo, setUserInfo] = useState<any>(null)
@@ -77,19 +77,17 @@ export default function ServiceDeskPage() {
   }
 
   useEffect(() => {
-
     try {
-      getProfile();
-      search();
+      getProfile()
+      search()
     } catch (error) {
       // qualquer erro na leitura: enviar para login
-      console.error("Erro lendo sessionStorage:", error);
-      router.replace("/");
-      return;
+      console.error("Erro lendo sessionStorage:", error)
+      router.replace("/")
+      return
     } finally {
-      setLoading(false);
+      setLoading(false)
     }
-      
   }, [token, router])
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -187,58 +185,52 @@ export default function ServiceDeskPage() {
     <div className="min-h-screen bg-background">
       {/* Navigation */}
       <nav className="border-b bg-card-foreground">
-        <div className="flex items-center justify-between px-8 py-6">
-          <h1 className="text-3xl font-semibold text-muted">CallDesk</h1>
+        <div className="flex items-center justify-between px-6 py-4">
+          <h1 className="text-xl font-semibold text-muted">CallDesk</h1>
 
-          <div className="flex items-center gap-6">
-            <Button
-              variant="outline"
-              onClick={() => setShowTicketsList(true)}
-              className="h-16 px-10 text-lg font-medium"
-            >
+          <div className="flex items-center gap-4">
+            <Button variant="outline" onClick={() => setShowTicketsList(true)} className="px-4 py-2">
               Meus Tickets
             </Button>
 
             {/* User Avatar with Modal */}
-
             <Dialog>
               <DialogTrigger asChild>
                 <Button variant="ghost" className="p-0">
-                  <Avatar className="h-12 w-12">
-                    <AvatarImage src="/profile-icon.png?height=48&width=48" />
+                  <Avatar className="h-8 w-8">
+                    <AvatarImage src="/profile-icon.png?height=32&width=32" />
                     <AvatarFallback>
-                      <User className="h-6 w-6" />
+                      <User className="h-4 w-4" />
                     </AvatarFallback>
                   </Avatar>
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-lg">
+              <DialogContent className="sm:max-w-md">
                 <DialogHeader>
-                  <DialogTitle className="text-xl">User Profile</DialogTitle>
+                  <DialogTitle className="text-lg">User Profile</DialogTitle>
                 </DialogHeader>
-                <div className="space-y-6">
-                  <div className="flex items-center gap-4">
-                    <Avatar className="h-16 w-16">
-                      <AvatarImage src="/placeholder.svg?height=64&width=64" />
+                <div className="space-y-4">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-12 w-12">
+                      <AvatarImage src="/placeholder.svg?height=48&width=48" />
                       <AvatarFallback>
-                        <User className="h-8 w-8" />
+                        <User className="h-6 w-6" />
                       </AvatarFallback>
                     </Avatar>
                     <div>
-                      <p className="font-medium text-lg">{userInfo?.name}</p>
-                      <p className="text-base text-muted-foreground">{userInfo?.email}</p>
+                      <p className="font-medium">{userInfo?.name}</p>
+                      <p className="text-sm text-muted-foreground">{userInfo?.email}</p>
                     </div>
                   </div>
                   <Button
                     variant="destructive"
-                    className="w-full text-base"
-                    size="lg"
+                    className="w-full"
                     onClick={() => {
                       sessionStorage.removeItem("authToken")
                       window.location.href = "/"
                     }}
                   >
-                    <LogOut className="mr-2 h-5 w-5" />
+                    <LogOut className="mr-2 h-4 w-4" />
                     Logout
                   </Button>
                 </div>
@@ -249,65 +241,63 @@ export default function ServiceDeskPage() {
       </nav>
 
       {/* Main Content */}
-      <main className="container mx-auto px-8 py-12">
+      <main className="container mx-auto px-6 py-8">
         {showTicketsList ? (
-          <div className="max-w-6xl mx-auto">
-            <div className="flex items-center gap-6 mb-8">
-              <Button variant="ghost" onClick={() => setShowTicketsList(false)} size="lg" className="text-base">
-                <ArrowLeft className="mr-2 h-5 w-5" />
+          <div className="max-w-4xl mx-auto">
+            <div className="flex items-center gap-4 mb-6">
+              <Button variant="ghost" onClick={() => setShowTicketsList(false)} className="text-sm">
+                <ArrowLeft className="mr-2 h-4 w-4" />
                 Voltar
               </Button>
-              <h2 className="text-4xl font-semibold">Meus Tickets</h2>
-              <span className="text-lg text-muted-foreground">
+              <h2 className="text-2xl font-semibold">Meus Tickets</h2>
+              <span className="text-sm text-muted-foreground">
                 ({tickets.length} {tickets.length === 1 ? "ticket" : "tickets"})
               </span>
             </div>
 
-            <div className="space-y-6">
+            <div className="space-y-4">
               {currentTickets.map((ticket) => (
-                <Card key={ticket._id} className="p-2">
-                  <CardHeader className="pb-4">
+                <Card key={ticket._id} className="p-4">
+                  <CardHeader className="pb-3">
                     <div className="flex items-center justify-between">
-                      <CardTitle className="text-2xl">{ticket._id}</CardTitle>
-                      <div className="flex gap-3">
-                        <Badge className={`text-base px-4 py-2 ${getUrgencyClass(ticket.urgency_level)}`}>
+                      <CardTitle className="text-lg">{ticket._id}</CardTitle>
+                      <div className="flex gap-2">
+                        <Badge className={`text-sm px-2 py-1 ${getUrgencyClass(ticket.urgency_level)}`}>
                           {ticket.urgency_level}
                         </Badge>
-                        <Badge className={`text-base px-4 py-2 ${getStatusClass(ticket.status)}`}>
-                          {ticket.status}
-                        </Badge>
+                        <Badge className={`text-sm px-2 py-1 ${getStatusClass(ticket.status)}`}>{ticket.status}</Badge>
                       </div>
                     </div>
                   </CardHeader>
                   <CardContent>
-                    <div className="space-y-3">
-                      <p className="text-xl text-muted-foreground">
+                    <div className="space-y-2">
+                      <p className="text-sm text-muted-foreground">
                         <strong>Endereço:</strong> {ticket.address}
                       </p>
 
-                      <p className="text-xl">
+                      <p className="text-sm">
                         <strong>Descrição:</strong>
                         <span
-                          className="ml-1 inline-block max-w-[24rem] truncate align-middle text-xl"
+                          className="ml-1 inline-block max-w-[20rem] truncate align-middle"
                           title={ticket.description}
                         >
                           {ticket.description}
                         </span>
                       </p>
 
-                      <p className="text-lg text-muted-foreground">Criado em: {ticket.created_at}</p>
+                      <p className="text-xs text-muted-foreground">Criado em: {ticket.created_at}</p>
 
-                      <div className="ml-250 transform -translate-y-20">
+                      <div className="flex justify-end">
                         <Button
                           variant="outline"
-                          size="lg"
-                          className="h-12 w-12 p-0 bg-gray-300"
+                          size="sm"
+                          className="h-8 w-8 p-0 bg-transparent"
                           onClick={(e) => {
                             e.stopPropagation()
                             handleOpenChat(ticket)
                           }}
                         >
-                          <MessageCircle className="h-5 w-5" />
+                          <MessageCircle className="h-4 w-4" />
                         </Button>
                       </div>
                     </div>
@@ -316,28 +306,28 @@ export default function ServiceDeskPage() {
               ))}
 
               {currentTickets.length === 0 && tickets.length > 0 && (
-                <div className="text-center py-8">
-                  <p className="text-lg text-muted-foreground">Nenhum ticket encontrado nesta página.</p>
+                <div className="text-center py-6">
+                  <p className="text-sm text-muted-foreground">Nenhum ticket encontrado nesta página.</p>
                 </div>
               )}
 
               {tickets.length === 0 && (
-                <div className="text-center py-8">
-                  <p className="text-lg text-muted-foreground">Você ainda não possui tickets.</p>
+                <div className="text-center py-6">
+                  <p className="text-sm text-muted-foreground">Você ainda não possui tickets.</p>
                 </div>
               )}
             </div>
 
             {totalPages > 1 && (
-              <div className="flex items-center justify-center gap-2 mt-8">
+              <div className="flex items-center justify-center gap-2 mt-6">
                 <Button
                   variant="outline"
                   size="sm"
                   onClick={handlePreviousPage}
                   disabled={currentPage === 1}
-                  className="h-10 w-10 p-0 bg-transparent"
+                  className="h-8 w-8 p-0 bg-transparent"
                 >
-                  <ChevronLeft className="h-4 w-4" />
+                  <ChevronLeft className="h-3 w-3" />
                 </Button>
 
                 <div className="flex gap-1">
@@ -347,7 +337,7 @@ export default function ServiceDeskPage() {
                       variant={currentPage === pageNumber ? "default" : "outline"}
                       size="sm"
                       onClick={() => handlePageChange(pageNumber)}
-                      className="h-10 w-10 p-0"
+                      className="h-8 w-8 p-0 text-sm"
                     >
                       {pageNumber}
                     </Button>
@@ -359,16 +349,16 @@ export default function ServiceDeskPage() {
                   size="sm"
                   onClick={handleNextPage}
                   disabled={currentPage === totalPages}
-                  className="h-10 w-10 p-0 bg-transparent"
+                  className="h-8 w-8 p-0 bg-transparent"
                 >
-                  <ChevronRight className="h-4 w-4" />
+                  <ChevronRight className="h-3 w-3" />
                 </Button>
               </div>
             )}
 
             {totalPages > 1 && (
-              <div className="text-center mt-4">
-                <p className="text-sm text-muted-foreground">
+              <div className="text-center mt-3">
+                <p className="text-xs text-muted-foreground">
                   Página {currentPage} de {totalPages} • Mostrando {indexOfFirstTicket + 1}-
                   {Math.min(indexOfLastTicket, tickets.length)} de {tickets.length} tickets
                 </p>
@@ -376,25 +366,25 @@ export default function ServiceDeskPage() {
             )}
           </div>
         ) : !showTicketForm ? (
-          <div className="flex flex-col items-center justify-center min-h-[60vh] space-y-8">
-            <h2 className="text-5xl font-semibold text-center">Seja bem-vindo ao ServiceDesk</h2>
-            <p className="text-muted-foreground text-center max-w-2xl text-xl leading-relaxed">
+          <div className="flex flex-col items-center justify-center min-h-[50vh] space-y-6">
+            <h2 className="text-3xl font-semibold text-center">Seja bem-vindo ao ServiceDesk</h2>
+            <p className="text-muted-foreground text-center max-w-xl text-base leading-relaxed">
               Precisa de ajuda? Abra um ticket de suporte e o nosso time irá resolver seus problemas.
             </p>
-            <Button onClick={() => setShowTicketForm(true)} size="lg" className="mt-8 text-lg px-8 py-4 h-auto">
+            <Button onClick={() => setShowTicketForm(true)} className="mt-6">
               Abrir um Ticket
             </Button>
           </div>
         ) : (
-          <div className="max-w-5xl mx-auto">
-            <Card className="p-12">
-              <CardHeader className="pb-12">
-                <CardTitle className="text-4xl">Criar um Ticket</CardTitle>
+          <div className="max-w-3xl mx-auto">
+            <Card className="p-6">
+              <CardHeader className="pb-6">
+                <CardTitle className="text-2xl">Criar um Ticket</CardTitle>
               </CardHeader>
               <CardContent>
-                <form onSubmit={handleSubmit} className="space-y-10">
-                  <div className="space-y-4">
-                    <Label htmlFor="address" className="text-2xl">
+                <form onSubmit={handleSubmit} className="space-y-6">
+                  <div className="space-y-2">
+                    <Label htmlFor="address" className="text-sm font-medium">
                       Endereço
                     </Label>
                     <Input
@@ -404,60 +394,45 @@ export default function ServiceDeskPage() {
                       value={formData.address}
                       onChange={(e) => handleInputChange("address", e.target.value)}
                       required
-                      className="!text-xl !p-8"
                     />
                   </div>
 
-                  <div className="space-y-4">
-                    <Label htmlFor="description" className="text-2xl">
+                  <div className="space-y-2">
+                    <Label htmlFor="description" className="text-sm font-medium">
                       Descrição
                     </Label>
                     <Textarea
                       id="description"
                       placeholder="Descreva seu problema em detalhes..."
-                      rows={8}
+                      rows={4}
                       value={formData.description}
                       onChange={(e) => handleInputChange("description", e.target.value)}
                       required
-                      className="!text-xl !p-8"
                     />
                   </div>
 
-                  <div className="space-y-4">
-                    <Label htmlFor="urgency_level" className="text-2xl">
+                  <div className="space-y-2">
+                    <Label htmlFor="urgency_level" className="text-sm font-medium">
                       Nível de urgência
                     </Label>
                     <Select onValueChange={(value) => handleInputChange("urgency_level", value)} required>
-                      <SelectTrigger className="text-lg h-14 px-4">
+                      <SelectTrigger>
                         <SelectValue placeholder="Selecione o nível de urgência" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Baixo" className="text-lg">
-                          Baixo
-                        </SelectItem>
-                        <SelectItem value="Médio" className="text-lg">
-                          Médio
-                        </SelectItem>
-                        <SelectItem value="Alto" className="text-lg">
-                          Alto
-                        </SelectItem>
-                        <SelectItem value="Crítico" className="text-lg">
-                          Crítico
-                        </SelectItem>
+                        <SelectItem value="Baixo">Baixo</SelectItem>
+                        <SelectItem value="Médio">Médio</SelectItem>
+                        <SelectItem value="Alto">Alto</SelectItem>
+                        <SelectItem value="Crítico">Crítico</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
 
-                  <div className="flex gap-6 pt-8">
-                    <Button type="submit" className="flex-1 text-xl h-14">
+                  <div className="flex gap-4 pt-4">
+                    <Button type="submit" className="flex-1">
                       Criar
                     </Button>
-                    <Button
-                      type="button"
-                      variant="outline"
-                      onClick={() => setShowTicketForm(false)}
-                      className="flex-1 text-xl h-14"
-                    >
+                    <Button type="button" variant="outline" onClick={() => setShowTicketForm(false)} className="flex-1">
                       Cancelar
                     </Button>
                   </div>
