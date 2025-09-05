@@ -13,7 +13,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { User, LogOut, ArrowLeft, Search, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react"
 
 export default function ServiceDeskPage() {
-  //const token = sessionStorage.getItem("authToken")
+  const BASE = process.env.NEXT_PUBLIC_API_URL;
   const [token, setToken] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const effectRan = useRef(false)
@@ -35,7 +35,7 @@ export default function ServiceDeskPage() {
 
   async function search() {
     try {
-      const response = await fetch("http://localhost:3001/ticket", {
+      const response = await fetch(`${BASE}/ticket`, {
         headers: {Authorization: "Bearer " + token},
       })
       if (!response.ok) {
@@ -50,7 +50,7 @@ export default function ServiceDeskPage() {
 
   async function getProfile() {
     try {
-      const response = await fetch("http://localhost:3001/auth/me", {
+      const response = await fetch(`${BASE}/auth/me`, {
         headers: { Authorization: "Bearer " + token },
       })
 
@@ -117,7 +117,7 @@ export default function ServiceDeskPage() {
   const handleStatusUpdate = async (status: string) => {
     if (selectedTicket) {
       try {
-        const response = await fetch("http://localhost:3001/ticket/status", {
+        const response = await fetch(`${BASE}/ticket/status`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
