@@ -101,7 +101,7 @@ export default function TicketChatPage() {
     if (!ticketId) return
 
     // create a new socket for this page
-    const s = io(process.env.NETX_PUBLIC_API_URL, {
+    const s = io(process.env.NEXT_PUBLIC_API_URL!, {
       transports: ["websocket", "polling"],
       autoConnect: true,
     })
