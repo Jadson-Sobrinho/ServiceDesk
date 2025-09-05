@@ -102,8 +102,8 @@ export default function TicketChatPage() {
 
     // create a new socket for this page
     const s = io(process.env.NETX_PUBLIC_API_URL, {
+      transports: ["websocket", "polling"],
       autoConnect: true,
-      // you can add auth/token here: transports: ["websocket"], auth: { token }
     })
     socketRef.current = s
 
