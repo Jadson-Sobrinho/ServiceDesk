@@ -22,6 +22,7 @@ export default function TicketChatPage() {
   const params = useParams()
   const router = useRouter()
   const ticketId = (params as any)?.ticketId as string
+  const BASE = process.env.NEXT_PUBLIC_API_URL;
 
   const [ticket, setTicket] = useState<any>(null)
   const [messages, setMessages] = useState<Message[]>([])
@@ -36,7 +37,7 @@ export default function TicketChatPage() {
     async function fetchTicket() {
       try {
         setLoading(true)
-        const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/ticket/${ticketId}`)
+        const response = await fetch(`${BASE}/ticket/${ticketId}`)
         const data = await response.json()
 
         if (mounted && data) {
@@ -123,7 +124,7 @@ export default function TicketChatPage() {
               createdAt: ticket.createdAt,
             }
           : { _id: ticketId },
-        user: "68a3c65d332c293c2c5f21a8",
+        user: "68bae2b996ecd8563e264eda",
       })
     }
 
@@ -207,7 +208,7 @@ export default function TicketChatPage() {
     if (!newMessage.trim()) return
 
     // build sender payload: prefer id + role object
-    const senderPayload = { id: "68a3c65d332c293c2c5f21a8", role: "support" };
+    const senderPayload = { id: "68bae2b996ecd8563e264eda", role: "support" };
 
     socketRef.current?.emit("chatMessage", {
       conversationId: ticketId,
