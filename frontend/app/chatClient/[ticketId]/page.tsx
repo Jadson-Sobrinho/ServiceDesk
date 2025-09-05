@@ -36,7 +36,7 @@ export default function TicketChatPage() {
     async function fetchTicket() {
       try {
         setLoading(true)
-        const response = await fetch(`http://localhost:3001/ticket/${ticketId}`)
+        const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/ticket/${ticketId}`)
         const data = await response.json()
 
         if (mounted && data) {
@@ -101,7 +101,7 @@ export default function TicketChatPage() {
     if (!ticketId) return
 
     // create a new socket for this page
-    const s = io("http://localhost:3001", {
+    const s = io("https://calldesk.vercel.app", {
       autoConnect: true,
       // you can add auth/token here: transports: ["websocket"], auth: { token }
     })
