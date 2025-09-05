@@ -13,7 +13,9 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { User, LogOut, ArrowLeft, Search, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react"
 
 export default function ServiceDeskPage() {
-  const token = sessionStorage.getItem("authToken")
+  //const token = sessionStorage.getItem("authToken")
+  const [token, setToken] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
   const effectRan = useRef(false)
   const router = useRouter()
   const [userInfo, setUserInfo] = useState<any>(null)
@@ -65,14 +67,28 @@ export default function ServiceDeskPage() {
   }
 
   useEffect(() => {
-    
-    if(!token) {
-      router.replace("/unauthorized");
+    try {
+      const stored = window.sessionStorage.getItem("authToken");
+      if (!stored) {
+        // sem token: redireciona para login
+        router.replace("/");
+        return;
+      }
+
+      // temos token -> salva no estado e segue
+      setToken(stored);
+    } catch (error) {
+      // qualquer erro na leitura: enviar para login
+      console.error("Erro lendo sessionStorage:", error);
+      router.replace("/");
+      return;
+    } finally {
+      setLoading(false);
     }
 
     getProfile()
     search()
-  }, [])
+  }, [router])
 
   const filteredTickets = tickets.filter((ticket) => {
     const matchesSearch =
