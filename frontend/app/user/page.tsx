@@ -82,8 +82,9 @@ export default function ServiceDeskPage() {
 
       // temos token -> salva no estado e segue
       setToken(stored);
-      search();
+
       getProfile();
+      search();
     } catch (error) {
       // qualquer erro na leitura: enviar para login
       console.error("Erro lendo sessionStorage:", error);
@@ -92,6 +93,7 @@ export default function ServiceDeskPage() {
     } finally {
       setLoading(false);
     }
+      
   }, [router])
 
   const handleSubmit = async (e: React.FormEvent) => {
