@@ -19,6 +19,7 @@ interface Message {
 }
 
 export default function TicketChatPage() {
+  const BASE = process.env.NEXT_PUBLIC_API_URL;
   const params = useParams()
   const router = useRouter()
   const ticketId = (params as any)?.ticketId as string
@@ -29,14 +30,13 @@ export default function TicketChatPage() {
   const [loading, setLoading] = useState(true)
   const socketRef = useRef<Socket | null>(null)
 
-  // Fetch ticket once when ticketId changes
   useEffect(() => {
     let mounted = true
 
     async function fetchTicket() {
       try {
         setLoading(true)
-        const response = await fetch(process.env.NEXT_PUBLIC_API_URL + `/ticket/${ticketId}`)
+        const response = await fetch(`${BASE}/ticket/${ticketId}`)
         const data = await response.json()
 
         if (mounted && data) {
@@ -101,7 +101,7 @@ export default function TicketChatPage() {
     if (!ticketId) return
 
     // create a new socket for this page
-    const s = io(process.env.NEXT_PUBLIC_API_URL!, {
+    const s = io(BASE!, {
       transports: ["websocket", "polling"],
       autoConnect: true,
     })

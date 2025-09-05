@@ -16,6 +16,7 @@ import { Badge } from "@/components/ui/badge"
 import { User, LogOut, ArrowLeft, MessageCircle, ChevronLeft, ChevronRight } from "lucide-react"
 
 export default function ServiceDeskPage() {
+  const BASE = process.env.NEXT_PUBLIC_API_URL;
   const [token, setToken] = useState(() => {
     if (typeof window !== "undefined") {
       return window.sessionStorage.getItem("authToken")
@@ -40,7 +41,7 @@ export default function ServiceDeskPage() {
 
   async function search() {
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/ticket/user", {
+      const response = await fetch(`${BASE}/ticket/user`, {
         headers: {
           Authorization: "Bearer " + token,
         },
@@ -59,7 +60,7 @@ export default function ServiceDeskPage() {
 
   async function getProfile() {
     try {
-      const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/auth/me", {
+      const response = await fetch(`${BASE}/auth/me`, {
         headers: { Authorization: "Bearer " + token },
       })
 
@@ -97,7 +98,7 @@ export default function ServiceDeskPage() {
 
     try {
       setIsSubmitting(true)
-      const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/ticket", {
+      const response = await fetch(`${BASE}/ticket`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

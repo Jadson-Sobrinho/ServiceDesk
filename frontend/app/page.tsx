@@ -12,6 +12,7 @@ import { Eye, EyeOff } from "lucide-react"
 import { fi } from "date-fns/locale"
 
 export default function LoginPage() {
+  const BASE = process.env.NEXT_PUBLIC_API_URL
   const router = useRouter();
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
@@ -23,7 +24,7 @@ export default function LoginPage() {
 
     try {
       setIsLoading(true)
-      const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/auth/login", {
+      const response = await fetch(`${BASE}/auth/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

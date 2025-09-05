@@ -12,6 +12,7 @@ import { Eye, EyeOff, User, Mail, Lock, LockKeyhole, PhoneCall, PhoneIcon } from
 import Link from "next/link"
 
 export default function RegisterPage() {
+  const BASE = process.env.NEXT_PUBLIC_API_URL;
   const router = useRouter();
   const [showPassword, setShowPassword] = useState(false)
   const [showRepeatPassword, setShowRepeatPassword] = useState(false)
@@ -75,7 +76,7 @@ export default function RegisterPage() {
       console.log("Registration data:", formData)
       const {repeatPassword, ...dataToSend} = formData;
         try {
-          const response = await fetch(process.env.NEXT_PUBLIC_API_URL + "/register", {
+          const response = await fetch(`${BASE}/register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
