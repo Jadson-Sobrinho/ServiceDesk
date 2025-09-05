@@ -14,4 +14,6 @@ router.post('/', auth.verifyToken, ticketController.createTicket);
 
 router.patch('/status', auth.verifyToken, ticketController.UpdateTicketStatus);
 
+router.get('/teste', ticketController.getAllTickets);
+
 module.exports = router;
