@@ -101,7 +101,7 @@ export default function TicketChatPage() {
     if (!ticketId) return
 
     // create a new socket for this page
-    const s = io("https://calldesk.vercel.app", {
+    const s = io(process.env.NETX_PUBLIC_API_URL, {
       autoConnect: true,
       // you can add auth/token here: transports: ["websocket"], auth: { token }
     })
