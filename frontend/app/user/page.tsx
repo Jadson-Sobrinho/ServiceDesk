@@ -82,6 +82,8 @@ export default function ServiceDeskPage() {
 
       // temos token -> salva no estado e segue
       setToken(stored);
+      search();
+      getProfile();
     } catch (error) {
       // qualquer erro na leitura: enviar para login
       console.error("Erro lendo sessionStorage:", error);
@@ -116,8 +118,7 @@ export default function ServiceDeskPage() {
       console.log("Ticket created successfully", result)
 
       //Atualiza a lista de "Meus tickets assim que um ticket é criado"
-      search()
-      getProfile()
+      await search()
     } catch (error) {
       console.error("Faild to create the ticket:", error)
     } finally {
