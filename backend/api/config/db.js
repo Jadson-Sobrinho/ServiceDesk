@@ -1,9 +1,9 @@
 const mongoose = require("mongoose");
-
+MONGO_URL = process.env.MONGO_URL;
 
 async function connectToDataBase() {
     try {
-        await mongoose.connect("mongodb+srv://jadson:C31f4d0r!@cluster0.3oq3ftf.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
+        await mongoose.connect(MONGO_URL)
     } catch (error) {
         process.exit(1);
     }
