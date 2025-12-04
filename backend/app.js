@@ -8,7 +8,7 @@ const registerRoute = require("./api/routes/register");
 const chatRoute = require("./api/routes/chat");
 
 app.use(cors({
-    origin: "https://servicedesk.vercel.app"
+    origin: "https://calldesk.vercel.app"
 }));
 
 app.use(express.json());
