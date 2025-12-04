@@ -188,7 +188,7 @@ export default function ServiceDeskPage() {
       {/* Navigation */}
       <nav className="border-b bg-card-foreground">
         <div className="flex items-center justify-between px-8 py-6">
-          <h1 className="text-3xl font-semibold text-muted">CallDesk</h1>
+          <h1 className="text-3xl font-semibold text-muted">ServiceDesk</h1>
 
           <div className="flex items-center gap-6">
             <Button

@@ -65,7 +65,7 @@ export default function LoginPage() {
       <Card className="w-full max-w-md shadow-xl">
         <CardHeader className="space-y-2 text-center pb-8">
           <div className="mx-auto mb-4">
-            <h1 className="text-3xl font-bold">CallDesk</h1>
+            <h1 className="text-3xl font-bold">ServiceDesk</h1>
           </div>
           <CardTitle className="text-2xl font-semibold text-gray-900">Bem-vindo!</CardTitle>
           <CardDescription className="text-base text-gray-600">Entre na sua conta para continuar</CardDescription>
